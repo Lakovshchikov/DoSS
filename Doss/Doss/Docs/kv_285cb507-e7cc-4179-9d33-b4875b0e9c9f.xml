@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type="text/xsl" href="https://portal.rosreestr.ru/xsl/EGRP/Reestr_Extract_Big/ZU/07/Common.xsl"?>
+
+<KVZU xmlns="urn://x-artefacts-rosreestr-ru/outgoing/kvzu/7.0.1"
+xmlns:smev="urn://x-artefacts-smev-gov-ru/supplementary/commons/1.0.1"
+xmlns:num="urn://x-artefacts-rosreestr-ru/commons/complex-types/numbers/1.0"
+xmlns:adrs="urn://x-artefacts-rosreestr-ru/commons/complex-types/address-output/4.0.1"
+xmlns:spa="urn://x-artefacts-rosreestr-ru/commons/complex-types/entity-spatial/5.0.1"
+xmlns:cer="urn://x-artefacts-rosreestr-ru/commons/complex-types/certification-doc/1.0"
+xmlns:doc="urn://x-artefacts-rosreestr-ru/commons/complex-types/document-output/4.0.1"
+xmlns:nobj="urn://x-artefacts-rosreestr-ru/commons/complex-types/natural-objects-output/1.0.1">
+<Parcels>
+<Parcel CadastralNumber="40:03:050804:5" State="01"
+DateCreated="2007-10-12"
+>
+<CadastralBlock>40:03:050804</CadastralBlock>
+<Name>01</Name>
+<OldNumbers>
+<num:OldNumber Type="99" Number="40:03:05 41 00:0002;40:03:00 00 00:0086" />
+</OldNumbers>
+<Area>
+<Area>317400</Area>
+<Unit>055</Unit>
+<Inaccuracy>197.2</Inaccuracy>
+</Area>
+<Location>
+<inBounds>1</inBounds>
+<Placed>Д5</Placed>
+<Elaboration>
+<ReferenceMark>в районе д. Шемякино справа от дороги, на поле №II. 1-13</ReferenceMark>
+</Elaboration>
+<Address> <adrs:OKATO>29206000050</adrs:OKATO>
+<adrs:KLADR>4000400007400</adrs:KLADR>
+<adrs:Region>40</adrs:Region>
+<adrs:District Name="Боровский" Type="р-н" />
+<adrs:Locality Name="Шемякино" Type="д" />
+<adrs:Note>обл. Калужская, р-н Боровский, д. Шемякино</adrs:Note>
+</Address>
+</Location>
+<Category>003003000000</Category>
+<Utilization Utilization="141002000000" ByDoc="Для ведения крестьянского (фермерского) хозяйства" />
+<Rights>
+<Right>
+<Name>Собственность</Name>
+<Type>001001000000</Type>
+<Owners>
+<Owner>
+<Person>
+<FamilyName>Россовский</FamilyName>
+<FirstName>Михаил</FirstName>
+<Patronymic>Васильевич</Patronymic>
+</Person>
+</Owner>
+</Owners>
+<Registration>
+<RegNumber>40-40-03/030/2007-642</RegNumber>
+<RegDate>2008-01-07</RegDate>
+</Registration>
+</Right>
+</Rights>
+<SubParcels>
+<SubParcel NumberRecord="1" Full="1" State="05" >
+<Area>
+<Area>317400</Area>
+<Unit>055</Unit>
+</Area>
+<Encumbrance>
+<Type>022099000000</Type>
+<Document>
+<doc:CodeDocument>558401059900</doc:CodeDocument>
+<doc:Name>Свидетельство о государственной регистрации права</doc:Name>
+<doc:Number>0063665</doc:Number>
+<doc:Date>2005-12-26</doc:Date>
+</Document>
+</Encumbrance>
+</SubParcel>
+</SubParcels>
+<EntitySpatial EntSys="ID0" >
+<spa:SpatialElement >
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="1" >
+<spa:Ordinate X="494023" Y="1306092.05" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="2" >
+<spa:Ordinate X="494053.03" Y="1306070" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="3" >
+<spa:Ordinate X="494248.76" Y="1306015.66" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="4" >
+<spa:Ordinate X="494349" Y="1306016.8" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="5" >
+<spa:Ordinate X="494622.88" Y="1305872.37" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="6" >
+<spa:Ordinate X="494653" Y="1305795" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="7" >
+<spa:Ordinate X="494722.8" Y="1305737" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="8" >
+<spa:Ordinate X="494795" Y="1305747" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="9" >
+<spa:Ordinate X="494796" Y="1305879" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="10" >
+<spa:Ordinate X="494771" Y="1305929.7" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="11" >
+<spa:Ordinate X="494821.03" Y="1306222.37" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="12" >
+<spa:Ordinate X="494813.63" Y="1306439.02" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="13" >
+<spa:Ordinate X="494671" Y="1306507.55" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="14" >
+<spa:Ordinate X="494608.07" Y="1306511.25" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="15" >
+<spa:Ordinate X="494576.59" Y="1306448" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="16" >
+<spa:Ordinate X="494526.5" Y="1306426.07" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="17" >
+<spa:Ordinate X="494459.9" Y="1306327.9" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="18" >
+<spa:Ordinate X="494400.6" Y="1306307.55" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="19" >
+<spa:Ordinate X="494295.1" Y="1306327.9" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="20" >
+<spa:Ordinate X="494200.6" Y="1306298.2" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+<spa:SpelementUnit TypeUnit="Точка" SuNmb="1" >
+<spa:Ordinate X="494023" Y="1306092.05" OrdNmb="1" DeltaGeopoint="0.3" />
+</spa:SpelementUnit>
+</spa:SpatialElement>
+</EntitySpatial>
+<CadastralCost Value="542754" Unit="383" />
+</Parcel>
+</Parcels>
+<CertificationDoc>
+<cer:Organization>ФГИС ЕГРН</cer:Organization>
+<cer:Date>2018-08-21</cer:Date>
+<cer:Number>99/2018/154135791</cer:Number>
+</CertificationDoc>
+<CoordSystems>
+<spa:CoordSystem Name="СК кадастрового округа" CsId="ID0" />
+</CoordSystems>
+<eDocument CodeType="112" Version="07" Scope="GKN">
+<Sender Kod="00.0.4.195"
+Name="ФГИС ЕГРН"
+Region="99"
+Date_Upload="2018-08-21"
+Appointment="Государственный регистратор"
+/>
+<Recipient Kod="00.0.4.111" Name="УПРАВЛЕНИЕ АРХИТЕКТУРЫ И ГРАДОСТРОИТЕЛЬСТВА КАЛУЖСКОЙ ОБЛАСТИ" />
+</eDocument>
+<ReestrExtract>
+<DeclarAttribute ID_KUVI="0"
+ExtractTypeCode="012000"
+ExtractTypeText="Выписка из Единого государственного реестра недвижимости об объекте недвижимости"
+ExtractNumber="99/2018/154135791"
+ExtractDate="21.08.2018"
+RequeryNumber="80-50272826"
+RequeryDate="20.08.2018"
+ExtractCount="1"
+NoticeCount="0"
+RefuseCount="0"
+Registrator="ФГИС ЕГРН">
+<ReceivName>УПРАВЛЕНИЕ АРХИТЕКТУРЫ И ГРАДОСТРОИТЕЛЬСТВА КАЛУЖСКОЙ ОБЛАСТИ</ReceivName>
+<ReceivAdress>не указан</ReceivAdress>
+</DeclarAttribute>
+<ExtractObjectRight>
+<HeadContent>
+<ID_REC_KUVI>0</ID_REC_KUVI>
+<Title>ФЕДЕРАЛЬНАЯ СЛУЖБА ГОСУДАРСТВЕННОЙ РЕГИСТРАЦИИ, КАДАСТРА И КАРТОГРАФИИ</Title>
+<DeptName>ФГИС ЕГРН</DeptName>
+<ExtractTitle>Выписка из Единого государственного реестра недвижимости об объекте недвижимости</ExtractTitle>
+<Content>На основании запроса от 20.08.2018 г., поступившего на рассмотрение 21.08.2018 г., сообщаем, что согласно записям Единого государственного реестра недвижимости:</Content>
+</HeadContent>
+<ExtractObject>
+<ObjectRight>
+<Right RightNumber="1">
+<Owner >
+<ID_Subject>21344279840</ID_Subject>
+<Person>
+<Code_SP>007003000000</Code_SP>
+<Content>Россовский Михаил Васильевич</Content>
+<FIO>
+<Surname>Россовский</Surname>
+<First>Михаил</First>
+<Patronymic>Васильевич</Patronymic>
+</FIO>
+</Person>
+</Owner>
+<Registration >
+<ID_Record>227957700940</ID_Record>
+<RegNumber>40-40-03/030/2007-642</RegNumber>
+<Type>001001000000</Type>
+<Name>Собственность, № 40-40-03/030/2007-642 от 07.01.2008</Name>
+<RegDate>07.01.2008</RegDate>
+</Registration>
+<NoEncumbrance>не зарегистрировано</NoEncumbrance>
+</Right>
+<NoShareHolding>не зарегистрировано</NoShareHolding>
+</ObjectRight>
+<RightAssert>данные отсутствуют</RightAssert>
+<RightClaim>данные отсутствуют</RightClaim>
+<RightAgainst>данные отсутствуют</RightAgainst>
+<RightSteal>данные отсутствуют</RightSteal>
+<WithoutThirdParty>данные отсутствуют</WithoutThirdParty>
+<InabilityRegWithoutOwner></InabilityRegWithoutOwner>
+<InabilityRegZU></InabilityRegZU>
+</ExtractObject>
+<InfoENK/>
+<InfoPIK/>
+<FootContent>
+<Recipient>УПРАВЛЕНИЕ АРХИТЕКТУРЫ И ГРАДОСТРОИТЕЛЬСТВА КАЛУЖСКОЙ ОБЛАСТИ</Recipient>
+<ExtractDate>21.08.2018</ExtractDate>
+<Content></Content>
+</FootContent>
+</ExtractObjectRight>
+</ReestrExtract>
+</KVZU>

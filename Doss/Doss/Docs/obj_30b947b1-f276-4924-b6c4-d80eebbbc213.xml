@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type="text/xsl" href="https://portal.rosreestr.ru/xsl/EGRP/Reestr_Extract_List/07/Common.xsl"?>
+<Extract>
+    <eDocument CodeType="112" Version="07" Scope="GKN">
+        <Sender Kod="00.0.4.195"
+                Name="ФГИС ЕГРН"
+                Region="99"
+                Date_Upload="2018-08-21"
+                Appointment="Государственный регистратор"
+                />
+        <Recipient Kod="00.0.4.111" Name="УПРАВЛЕНИЕ АРХИТЕКТУРЫ И ГРАДОСТРОИТЕЛЬСТВА КАЛУЖСКОЙ ОБЛАСТИ" />
+    </eDocument>
+    <ReestrExtract>
+        <DeclarAttribute ID_KUVI="0"
+                         ExtractTypeCode="020000"
+                         ExtractTypeText="Выписка из Единого государственного реестра недвижимости о переходе прав на объект недвижимости"
+                         ExtractNumber="99/2018/154137187"
+                         ExtractDate="21.08.2018"
+                         RequeryNumber="80-50272970"
+                         RequeryDate="20.08.2018"
+                         ExtractCount="1"
+                         NoticeCount="0"
+                         RefuseCount="0"
+                         Registrator="ФГИС ЕГРН">
+            <ReceivName>УПРАВЛЕНИЕ АРХИТЕКТУРЫ И ГРАДОСТРОИТЕЛЬСТВА КАЛУЖСКОЙ ОБЛАСТИ</ReceivName>
+            <ReceivAdress>не указан</ReceivAdress>
+        </DeclarAttribute>
+            <ExtractObjectRight>
+        <HeadContent>
+            <ID_REC_KUVI>0</ID_REC_KUVI>
+            <Title>ФЕДЕРАЛЬНАЯ СЛУЖБА ГОСУДАРСТВЕННОЙ РЕГИСТРАЦИИ, КАДАСТРА И КАРТОГРАФИИ</Title>
+            <DeptName>ФГИС ЕГРН</DeptName>
+            <ExtractTitle>Выписка из Единого государственного реестра недвижимости о переходе прав на объект недвижимости</ExtractTitle>
+            <Content>На основании запроса от 20.08.2018 г., поступившего на рассмотрение 21.08.2018 г., сообщаем, что в Единый государственный реестр недвижимости внесены записи о государственной регистрации перехода прав на:</Content>
+        </HeadContent>
+                <ExtractObject>
+    <ObjectDesc>
+        <ID_Object>5887373313</ID_Object>
+        <CadastralNumber>40:03:050804:4</CadastralNumber>
+        <ObjectType>002001001000</ObjectType>
+        <ObjectTypeText>Земельный участок</ObjectTypeText>
+        <Name>Землепользование</Name>
+        <GroundCategory>003003000000</GroundCategory>
+        <GroundCategoryText>Земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения </GroundCategoryText>
+        <Area>
+            <Area>14600</Area>
+            <AreaText>14600 кв.м</AreaText>
+        <Unit>012002001000</Unit>
+        </Area>
+        <Address>
+        <Content>обл. Калужская, р-н Боровский, сельское поселение &quot; деревня Кривское &quot;</Content>
+        <Region Name="Калужская область" Code="40"/>
+        <Code_OKATO>29206000000</Code_OKATO>
+        <Code_KLADR>4000400000000</Code_KLADR>
+    <District Name="Боровский" Type="р-н" />
+    <City Name="сельское поселение &amp;quot; деревня Кривское &amp;quot;" Type="тер" />
+        </Address>
+    </ObjectDesc>
+        <Owner OwnerNumber="1">
+    <ID_Subject>21344311840</ID_Subject>
+    <Person>
+        <Code_SP>007003000000</Code_SP>
+        <Content>Тарасова Наталья Александровна</Content>
+        <FIO>
+            <Surname>Тарасова</Surname>
+            <First>Наталья</First>
+            <Patronymic>Александровна</Patronymic>
+        </FIO>
+    </Person>
+        </Owner>
+    <Registration RegistrNumber="1">
+        <ID_Record>248044973140</ID_Record>
+        <RegNumber>40-40-03/043/2007-824</RegNumber>
+        <Type>001001000000</Type>
+        <Name>Собственность</Name>
+        <RegDate>10.01.2008</RegDate>
+        <EndNumber>40-40-03/043/2007-824</EndNumber>
+        <EndDate>11.03.2008</EndDate>
+    <DocFound>
+        <ID_Document>248044973640</ID_Document>
+        <Content>Договор дарения земельного участка oт 25.01.2008г., дата регистрации 11.03.2008г., №40-40-03/004/2008-654</Content>
+        <Type_Document>010003005000</Type_Document>
+        <Name>Договор дарения земельного участка</Name>
+        <Number>б/н</Number>
+        <Date>25.01.2008</Date>
+    </DocFound>
+    </Registration>
+        <Owner OwnerNumber="2">
+    <ID_Subject>21344279840</ID_Subject>
+    <Person>
+        <Code_SP>007003000000</Code_SP>
+        <Content>Россовский Михаил Васильевич</Content>
+        <FIO>
+            <Surname>Россовский</Surname>
+            <First>Михаил</First>
+            <Patronymic>Васильевич</Patronymic>
+        </FIO>
+    </Person>
+        </Owner>
+    <Registration RegistrNumber="2">
+        <ID_Record>248044974240</ID_Record>
+        <RegNumber>40-40-03/004/2008-655</RegNumber>
+        <Type>001001000000</Type>
+        <Name>Собственность</Name>
+        <RegDate>11.03.2008</RegDate>
+    </Registration>
+                </ExtractObject>
+        <FootContent>
+           <Recipient>УПРАВЛЕНИЕ АРХИТЕКТУРЫ И ГРАДОСТРОИТЕЛЬСТВА КАЛУЖСКОЙ ОБЛАСТИ</Recipient>
+           <ExtractDate>21.08.2018</ExtractDate>
+           <Content>Использование сведений, содержащихся в настоящей выписке, способами или в форме, которые наносят ущерб правам и законным интересам правообладателей, влечет ответственность, предусмотренную законодательством Российской Федерации.</Content>
+        </FootContent>
+            </ExtractObjectRight>
+    </ReestrExtract>
+</Extract>
