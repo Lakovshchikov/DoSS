@@ -22,6 +22,7 @@ namespace Doss
     {
         public MainWindow()
         {
+            var firstCnange = "Test";
             InitializeComponent();
         }
     }
