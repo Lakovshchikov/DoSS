@@ -87,6 +87,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Docs\Задание на выполнение курсовой работы.doc" />
+    <None Include="Docs\Описание предметной области.docx" />
     <None Include="Docs\Пользовательские сценарии.docx" />
     <None Include="Docs\ТЗ Лаковщиков v4.docx" />
     <None Include="Properties\Settings.settings">
@@ -99,8 +100,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Docs\kv_285cb507-e7cc-4179-9d33-b4875b0e9c9f.xml" />
-    <Resource Include="Docs\obj_30b947b1-f276-4924-b6c4-d80eebbbc213.xml" />
+    <Resource Include="Samples\xml\kv_285cb507-e7cc-4179-9d33-b4875b0e9c9f.xml" />
+    <Resource Include="Samples\xml\obj_30b947b1-f276-4924-b6c4-d80eebbbc213.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Docs\Use case UML.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
