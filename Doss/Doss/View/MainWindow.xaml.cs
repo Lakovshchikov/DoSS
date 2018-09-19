@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Doss.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ namespace Doss
     {
         public MainWindow()
         {
-            var firstCnange = "Test";
+            DataContext = new MainVM(() => this.Close(), null);
             InitializeComponent();
         }
     }
