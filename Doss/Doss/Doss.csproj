@@ -103,6 +103,7 @@
     <None Include="Docs\запросы к сервисам.docx" />
     <None Include="Docs\Описание предметной области V2.docx" />
     <None Include="Docs\Описание предметной области.docx" />
+    <None Include="Docs\Описание работы UI.docx" />
     <None Include="Docs\Пользовательские сценарии.docx" />
     <None Include="Docs\ТЗ Лаковщиков v4.docx" />
     <None Include="packages.config" />
@@ -123,7 +124,9 @@
   <ItemGroup>
     <Resource Include="Docs\Use case UML.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Docs\макет интерфейса.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
