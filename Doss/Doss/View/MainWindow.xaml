@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ersi="http://schemas.esri.com/arcgis/runtime/2013"
+        xmlns:esri="http://schemas.esri.com/arcgis/runtime/2013"
         xmlns:local="clr-namespace:Doss"
+        xmlns:local1="clr-namespace:Doss.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1280" MinHeight="720" MinWidth="1280" WindowStartupLocation="CenterScreen">
+        Title="Предпроектное проектирование" Height="720" Width="1280" MinHeight="720" MinWidth="1280" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="350"/>
@@ -72,13 +73,33 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Информация о земельном участке:" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Label Content="Адрес:" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="0" Text="" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="60,0,0,0"/>
+                <Label Content="Информация о земельном участке:" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="14"/>
+                <Label Content="Адрес:" Grid.Column="0" Grid.Row="1"/>
+                <Label Content="Кад.номер:" Grid.Column="0" Grid.Row="3"/>
+                <Label Content="Кад.квартал:" Grid.Column="0" Grid.Row="4"/>
+                <Label Content="Статус:" Grid.Column="0" Grid.Row="5"/>
+                <Label Content="Категория земель:" Grid.Column="0" Grid.Row="6"/>
+                <Label Content="Уточненая площадь:" Grid.Column="0" Grid.Row="8"/>
+                <Label Content="Форма собственности:" Grid.Column="0" Grid.Row="10"/>
+                <Label Content="Кадастровая стоимость:" Grid.Column="0" Grid.Row="11"/>
+                <Label Content="Разрешенное исп.:" Grid.Column="0" Grid.Row="12"/>
+                <TextBlock Grid.Column="0" Text="" TextWrapping="Wrap" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="60,0,0,0"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label VerticalAlignment="Bottom" Content="Границы санитарно-защитной зоны:" Grid.Row="0" HorizontalAlignment="Center" FontSize="14"/>
+                <TextBox Grid.Row="1" Margin="60,15,60,15"/>
+                <Button Grid.Row="2" Content="Показать границы" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="100,5,100,20" Height="25" Background="White"/>
             </Grid>
         </Grid>
+        <esri:MapView Map="{Binding _Map}" Margin="5" Grid.Column="1" Grid.Row="1"/>
     </Grid>
     <Window.Resources>
+        <local1:MapVM x:Key="MapVM" />
         <Style TargetType="MenuItem">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="Background" Value="White"/>
@@ -86,6 +107,8 @@
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="Background" Value="White"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
 </Window>
