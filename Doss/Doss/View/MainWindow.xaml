@@ -3,10 +3,89 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ersi="http://schemas.esri.com/arcgis/runtime/2013"
         xmlns:local="clr-namespace:Doss"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="720" Width="1280" MinHeight="720" MinWidth="1280" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu  Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Background="White">
+            <MenuItem Header="Файл">
+                <MenuItem.Icon>
+                    <Image Source="/Resources/Images/file.png"></Image>
+                </MenuItem.Icon>
+                <MenuItem Header="Сохранить">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Images/save.png"></Image>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Загрузить">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Images/download.png"></Image>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Сформировать отчет">
+                    <MenuItem.Icon>
+                        <Image Source="/Resources/Images/report.png"></Image>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Добавить слой">
+                <MenuItem.Icon>
+                    <Image Source="/Resources/Images/AddMap.png"></Image>
+                </MenuItem.Icon>
+                <MenuItem Header="Кадастровая карта" IsCheckable="True"/>
+                <MenuItem Header="Карта со спутника" IsCheckable="True"/>
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="180"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Информация о земельном участке:" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Content="Адрес:" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="0" Text="" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="60,0,0,0"/>
+            </Grid>
+        </Grid>
     </Grid>
+    <Window.Resources>
+        <Style TargetType="MenuItem">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+    </Window.Resources>
 </Window>
