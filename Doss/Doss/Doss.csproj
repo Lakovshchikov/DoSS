@@ -149,6 +149,9 @@
     <Resource Include="Resources\Images\download.png" />
     <Resource Include="Resources\Images\save.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Docs\Концептуальна схема v.1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets" Condition="Exists('..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
