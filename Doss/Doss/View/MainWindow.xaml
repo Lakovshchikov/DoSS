@@ -44,6 +44,7 @@
                 </MenuItem.Icon>
                 <MenuItem Header="Кадастровая карта" IsCheckable="True"/>
                 <MenuItem Header="Карта со спутника" IsCheckable="True"/>
+                <MenuItem Header="Карта улиц" IsCheckable="True"/>
             </MenuItem>
         </Menu>
         <Grid Grid.Column="0" Grid.Row="1">
@@ -53,37 +54,69 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="29*"/>
+                    <RowDefinition Height="30*"/>
+                    <RowDefinition Height="29*"/>
+                    <RowDefinition Height="29.6"/>
+                    <RowDefinition Height="29*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Информация о земельном участке:" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="14"/>
-                <Label Content="Адрес:" Grid.Column="0" Grid.Row="1"/>
+                <Label Content="Адрес:" Panel.ZIndex="1" Grid.Column="0" Grid.Row="1"/>
                 <Label Content="Кад.номер:" Grid.Column="0" Grid.Row="3"/>
                 <Label Content="Кад.квартал:" Grid.Column="0" Grid.Row="4"/>
                 <Label Content="Статус:" Grid.Column="0" Grid.Row="5"/>
-                <Label Content="Категория земель:" Grid.Column="0" Grid.Row="6"/>
-                <Label Content="Уточненая площадь:" Grid.Column="0" Grid.Row="8"/>
-                <Label Content="Форма собственности:" Grid.Column="0" Grid.Row="10"/>
+                <Label Content="Категория земель:" Panel.ZIndex="1" Grid.Column="0" Grid.Row="6"/>
+                <Label Content="Форма собственности:" Panel.ZIndex="1" Grid.Column="0" Grid.Row="8"/>
+                <Label Content="Уточненная площадь:" Grid.Column="0" Grid.Row="10"/>
                 <Label Content="Кадастровая стоимость:" Grid.Column="0" Grid.Row="11"/>
-                <Label Content="Разрешенное исп.:" Grid.Column="0" Grid.Row="12"/>
-                <TextBlock Grid.Column="0" Text="" TextWrapping="Wrap" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="60,0,0,0"/>
+                <Label Content="Разрешенное исп.:" Panel.ZIndex="1" Grid.Column="0" Grid.Row="12"/>
+                <RichTextBox Grid.Column="0" Panel.ZIndex="0" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" FontSize="13" Padding="0,6,0,5">
+                    <FlowDocument>
+                        <Paragraph TextIndent="50">
+                            <Run Text=""/>
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
+                <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="80,5,0,5"/>
+                <TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="95,5,0,5"/>
+                <TextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="55,5,0,5"/>
+                <RichTextBox Grid.Column="0" Panel.ZIndex="0" Grid.Row="6" Grid.ColumnSpan="2" Grid.RowSpan="2" FontSize="13" Padding="0,6,0,5">
+                    <FlowDocument>
+                        <Paragraph TextIndent="130">
+                            <Run Text=""/>
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
+                <RichTextBox Grid.Column="0" Panel.ZIndex="0" Grid.Row="8" Grid.ColumnSpan="2" Grid.RowSpan="2" FontSize="13" Padding="0,6,0,5">
+                    <FlowDocument>
+                        <Paragraph TextIndent="150">
+                            <Run Text=""/>
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
+                <TextBox Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Margin="160,5,0,5"/>
+                <TextBox Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Margin="160,5,0,5"/>
+                <RichTextBox Grid.Column="0" Panel.ZIndex="0" Grid.Row="12" Grid.ColumnSpan="2" Grid.RowSpan="2" FontSize="13" Padding="0,6,0,5">
+                    <FlowDocument>
+                        <Paragraph TextIndent="130">
+                            <Run Text=""/>
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
@@ -109,6 +142,7 @@
             <Setter Property="Background" Value="White"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
         </Style>
     </Window.Resources>
 </Window>
