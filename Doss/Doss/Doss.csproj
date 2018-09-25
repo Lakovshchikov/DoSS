@@ -157,6 +157,9 @@
     <Resource Include="Docs\IDEF0 модель верхнего уровня.png" />
     <Resource Include="Docs\IDEF0 модель нижнего уровня.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Samples\Images\VGIT2igAS5I.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets" Condition="Exists('..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
