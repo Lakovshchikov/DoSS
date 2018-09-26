@@ -13,7 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Doss.ViewModel;
 
 namespace Doss
 {
@@ -24,8 +23,9 @@ namespace Doss
     {
         public MainWindow()
         {
-            DataContext = new MainVM(() => this.Close(), null);
             InitializeComponent();
+            DataContext = new MainVM(() => this.Close(), null, MyMapView);
+            
         }
     }
 }

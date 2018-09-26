@@ -47,92 +47,101 @@
                 <MenuItem Header="Карта улиц" IsCheckable="True"/>
             </MenuItem>
         </Menu>
-        <Grid Grid.Column="0" Grid.Row="1">
+        
+            <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="180"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Grid.Column="0">
+            <Label Content="Информация о земельном участке:" Grid.Row="0" HorizontalAlignment="Center" FontSize="14" Width="270" Height="30"/>
+            <ScrollViewer Grid.Row="1">
+                <WrapPanel>
+                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
+                        <Label.Content>
+                            <TextBlock Text="Тип:"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Content="Кад.номер:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Content="Кад.квартал:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Content="Статус:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Content="Адрес:" Height="80" BorderBrush="Black" BorderThickness="0.5"/>
+                    <TextBox IsReadOnly="True" Height="80"/>
+                    <Label Content="Категория земель:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Content="Кад.квартал:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
+                        <Label.Content>
+                            <TextBlock Text="Форма собственности:" TextWrapping="Wrap"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
+                        <Label.Content>
+                            <TextBlock Text="Кадастровая стоимость:" TextWrapping="Wrap"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
+                        <Label.Content>
+                            <TextBlock Text="Уточненная стоимость:" TextWrapping="Wrap"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
+                        <Label.Content>
+                            <TextBlock Text="Разрешенное использование:" TextWrapping="Wrap"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Content="По документу:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
+                        <Label.Content>
+                            <TextBlock Text="Кадастровый инженер:" TextWrapping="Wrap"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
+                        <Label.Content>
+                            <TextBlock Text="Дата установки на учет:" TextWrapping="Wrap"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
+                        <Label.Content>
+                            <TextBlock Text="Дата изменения сведений в ГКН:" TextWrapping="Wrap"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
+                        <Label.Content>
+                            <TextBlock Text="Дата выгрузки свелений из КГН:" TextWrapping="Wrap"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox IsReadOnly="True" Height="45"/>
+                </WrapPanel>
+            </ScrollViewer>
+            <Grid Grid.Row="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="29*"/>
-                    <RowDefinition Height="30*"/>
-                    <RowDefinition Height="29*"/>
-                    <RowDefinition Height="29.6"/>
-                    <RowDefinition Height="29*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Информация о земельном участке:" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" FontSize="14"/>
-                <Label Content="Адрес:" Panel.ZIndex="1" Grid.Column="0" Grid.Row="1"/>
-                <Label Content="Кад.номер:" Grid.Column="0" Grid.Row="3"/>
-                <Label Content="Кад.квартал:" Grid.Column="0" Grid.Row="4"/>
-                <Label Content="Статус:" Grid.Column="0" Grid.Row="5"/>
-                <Label Content="Категория земель:" Panel.ZIndex="1" Grid.Column="0" Grid.Row="6"/>
-                <Label Content="Форма собственности:" Panel.ZIndex="1" Grid.Column="0" Grid.Row="8"/>
-                <Label Content="Уточненная площадь:" Grid.Column="0" Grid.Row="10"/>
-                <Label Content="Кадастровая стоимость:" Grid.Column="0" Grid.Row="11"/>
-                <Label Content="Разрешенное исп.:" Panel.ZIndex="1" Grid.Column="0" Grid.Row="12"/>
-                <RichTextBox Grid.Column="0" Panel.ZIndex="0" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2" FontSize="13" Padding="0,6,0,5">
-                    <FlowDocument>
-                        <Paragraph TextIndent="50">
-                            <Run Text=""/>
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
-                <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="80,5,0,5"/>
-                <TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="95,5,0,5"/>
-                <TextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="55,5,0,5"/>
-                <RichTextBox Grid.Column="0" Panel.ZIndex="0" Grid.Row="6" Grid.ColumnSpan="2" Grid.RowSpan="2" FontSize="13" Padding="0,6,0,5">
-                    <FlowDocument>
-                        <Paragraph TextIndent="130">
-                            <Run Text=""/>
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
-                <RichTextBox Grid.Column="0" Panel.ZIndex="0" Grid.Row="8" Grid.ColumnSpan="2" Grid.RowSpan="2" FontSize="13" Padding="0,6,0,5">
-                    <FlowDocument>
-                        <Paragraph TextIndent="150">
-                            <Run Text=""/>
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
-                <TextBox Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Margin="160,5,0,5"/>
-                <TextBox Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Margin="160,5,0,5"/>
-                <RichTextBox Grid.Column="0" Panel.ZIndex="0" Grid.Row="12" Grid.ColumnSpan="2" Grid.RowSpan="2" FontSize="13" Padding="0,6,0,5">
-                    <FlowDocument>
-                        <Paragraph TextIndent="130">
-                            <Run Text=""/>
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
-            </Grid>
-            <Grid Grid.Row="1">
-                <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label VerticalAlignment="Bottom" Content="Границы санитарно-защитной зоны:" Grid.Row="0" HorizontalAlignment="Center" FontSize="14"/>
+                <Label VerticalAlignment="Bottom" Width="280" Content="Границы санитарно-защитной зоны:" Grid.Row="0" HorizontalAlignment="Center" FontSize="14"/>
                 <TextBox Grid.Row="1" Margin="60,15,60,15"/>
                 <Button Grid.Row="2" Content="Показать границы" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="100,5,100,20" Height="25" Background="White"/>
             </Grid>
         </Grid>
-        <esri:MapView Map="{Binding _Map}" Margin="5" Grid.Column="1" Grid.Row="1"/>
+        <esri:MapView x:Name="MyMapView" Map="{Binding Map}" Margin="5,0,5,5" Grid.Column="1" Grid.Row="1"/>
     </Grid>
     <Window.Resources>
-        <local1:MapVM x:Key="MapVM" />
+        
         <Style TargetType="MenuItem">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="Background" Value="White"/>
@@ -143,6 +152,12 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Width" Value="130"/>
+            <Setter Property="Height" Value="40"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Width" Value="190"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
     </Window.Resources>
 </Window>

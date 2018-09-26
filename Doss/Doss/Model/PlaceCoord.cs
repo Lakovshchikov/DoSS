@@ -1,16 +1,18 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Doss.Model
 {
-    public partial class Features
+    public partial class PlaceCoord
     {
         [JsonProperty("features")]
-        public Feature[] FeaturesFeatures { get; set; }
+        public Feature[] Features { get; set; }
 
         [JsonProperty("note")]
         public string Note { get; set; }
@@ -85,4 +87,25 @@ namespace Doss.Model
         public double Ymin { get; set; }
     }
 
+    //public partial class PlaceCoord
+    //{
+    //    public static PlaceCoord FromJson(string json) => JsonConvert.DeserializeObject<PlaceCoord>(json, QuickType.Converter.Settings);
+    //}
+
+    //public static class Serialize
+    //{
+    //    public static string ToJson(this PlaceCoord self) => JsonConvert.SerializeObject(self, QuickType.Converter.Settings);
+    //}
+
+    internal static class Converter
+    {
+        public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        {
+            MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
+            DateParseHandling = DateParseHandling.None,
+            Converters = {
+                new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
+            },
+        };
+    }
 }
