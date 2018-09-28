@@ -64,7 +64,7 @@ namespace Doss.ViewModel
             SelectedLocation = e.Location;
             ToWGS84();
             await CreatePictureMarker(OverLay);
-            SelectedPlaceCoord = GetPlaceCoordProp.GetPlaceCoordMethod(Coord.Substring(0, 9), Coord.Substring(12, 9)).Result;
+            SelectedPlaceCoord = GetPlaceCoordProp.GetPlaceCoordMethod(Coord.Substring(0, 9), Coord.Substring(12, 9));
             
         }
 

@@ -19,18 +19,32 @@ namespace Doss.Model
             };
         }
 
-        public async Task<PlaceCoord> GetPlaceCoordMethod(string x, string y)
+        public PlaceCoord GetPlaceCoordMethod(string x, string y)
         {
-            var result = await GetRequest<PlaceCoord>($"api/features/?text={x}%20{y}");
+            var result =  GetRequest<PlaceCoord>($"api/features/?text={x}%20{y}");
             return result;
         }
-        private async Task<T> GetRequest<T>(string url)
+        private PlaceCoord GetRequest<T>(string url)
         {
-            var response = await _httpClient.GetAsync(url);
+            var response =  _httpClient.GetAsync(url).Result;
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<T>(content);
+            var content =  response.Content.ReadAsStringAsync().Result;
+            PlaceCoord model = JsonConvert.DeserializeObject<PlaceCoord>(content);
             return model;
         }
     }
 }
+//private async Task<T> GetRequest<T>(string url)
+//{
+//    var response = await _httpClient.GetAsync(url);
+//    response.EnsureSuccessStatusCode();
+//    var content = await response.Content.ReadAsStringAsync();
+//    var model = JsonConvert.DeserializeObject<T>(content);
+//    return model;
+//}
+
+//public async Task<PlaceCoord> GetPlaceCoordMethod(string x, string y)
+//{
+//    var result = await GetRequest<PlaceCoord>($"api/features/?text={x}%20{y}");
+//    return result;
+//}
