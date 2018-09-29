@@ -86,26 +86,4 @@ namespace Doss.Model
         [JsonProperty("ymin")]
         public double Ymin { get; set; }
     }
-
-    //public partial class PlaceCoord
-    //{
-    //    public static PlaceCoord FromJson(string json) => JsonConvert.DeserializeObject<PlaceCoord>(json, QuickType.Converter.Settings);
-    //}
-
-    //public static class Serialize
-    //{
-    //    public static string ToJson(this PlaceCoord self) => JsonConvert.SerializeObject(self, QuickType.Converter.Settings);
-    //}
-
-    internal static class Converter
-    {
-        public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
-        {
-            MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
-            DateParseHandling = DateParseHandling.None,
-            Converters = {
-                new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
-            },
-        };
-    }
 }

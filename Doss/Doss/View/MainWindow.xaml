@@ -42,9 +42,9 @@
                 <MenuItem.Icon>
                     <Image Source="/Resources/Images/AddMap.png"></Image>
                 </MenuItem.Icon>
-                <MenuItem Header="Кадастровая карта" IsCheckable="True"/>
-                <MenuItem Header="Карта со спутника" IsCheckable="True"/>
-                <MenuItem Header="Карта улиц" IsCheckable="True"/>
+                <MenuItem Header="Кадастровая карта" IsCheckable="True" IsChecked="{Binding IsEnabled_Cad_Map}"/>
+                <MenuItem Header="Карта со спутника" IsCheckable="True" IsChecked="{Binding IsEnabled_Space_Map}"/>
+                <MenuItem Header="Карта улиц" IsCheckable="True" IsChecked="{Binding IsEnabled_Street_Map}"/>
             </MenuItem>
         </Menu>
         
@@ -62,69 +62,61 @@
                             <TextBlock Text="Тип:"/>
                         </Label.Content>
                     </Label>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding Type_LandPlot}" Height="45"/>
                     <Label Content="Кад.номер:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding Cad_Num_LandPlot}" Height="45"/>
                     <Label Content="Кад.квартал:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding Cad_quarter_LandPlot}" Height="45"/>
                     <Label Content="Статус:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding Status_LandPlot}" Height="45"/>
                     <Label Content="Адрес:" Height="80" BorderBrush="Black" BorderThickness="0.5"/>
-                    <TextBox IsReadOnly="True" Height="80"/>
+                    <TextBox IsReadOnly="True" Text="{Binding Adress_LandPlot}" Height="80"/>
                     <Label Content="Категория земель:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
-                    <TextBox IsReadOnly="True" Height="45"/>
-                    <Label Content="Кад.квартал:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding Categ_LandPlot}" Height="45"/>
                     <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
                         <Label.Content>
                             <TextBlock Text="Форма собственности:" TextWrapping="Wrap"/>
                         </Label.Content>
                     </Label>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding Form_LandPlot}" Height="45"/>
                     <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
                         <Label.Content>
                             <TextBlock Text="Кадастровая стоимость:" TextWrapping="Wrap"/>
                         </Label.Content>
                     </Label>
-                    <TextBox IsReadOnly="True" Height="45"/>
-                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
-                        <Label.Content>
-                            <TextBlock Text="Уточненная стоимость:" TextWrapping="Wrap"/>
-                        </Label.Content>
-                    </Label>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding Cost_LandPlot}" Height="45"/>
                     <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
                         <Label.Content>
                             <TextBlock Text="Разрешенное использование:" TextWrapping="Wrap"/>
                         </Label.Content>
                     </Label>
-                    <TextBox IsReadOnly="True" Height="45"/>
-                    <Label Content="По документу:" Height="45" BorderBrush="Black" BorderThickness="0.5"/>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding PermirredUse_LandPlot}" Height="45"/>
+                    <Label Content="По документу:" Height="100" BorderBrush="Black" BorderThickness="0.5"/>
+                    <TextBox IsReadOnly="True" Text="{Binding Doc_LandPlot}" Height="100"/>
                     <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
                         <Label.Content>
                             <TextBlock Text="Кадастровый инженер:" TextWrapping="Wrap"/>
                         </Label.Content>
                     </Label>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding CadEng_LandPlot}" Height="45"/>
                     <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
                         <Label.Content>
                             <TextBlock Text="Дата установки на учет:" TextWrapping="Wrap"/>
                         </Label.Content>
                     </Label>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding StartDate_LandPlot}" Height="45"/>
                     <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
                         <Label.Content>
                             <TextBlock Text="Дата изменения сведений в ГКН:" TextWrapping="Wrap"/>
                         </Label.Content>
                     </Label>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding ChangeDate_LandPlot}" Height="45"/>
                     <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
                         <Label.Content>
                             <TextBlock Text="Дата выгрузки свелений из КГН:" TextWrapping="Wrap"/>
                         </Label.Content>
                     </Label>
-                    <TextBox IsReadOnly="True" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding LoadingDate_LandPlot}" Height="45"/>
                 </WrapPanel>
             </ScrollViewer>
             <Grid Grid.Row="2">

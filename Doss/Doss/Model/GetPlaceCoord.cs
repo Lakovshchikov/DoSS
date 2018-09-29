@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Doss.Model2;
 
 namespace Doss.Model
 {
-    class GetPlaceCoord
+    class GetPlace
     {
         private readonly HttpClient _httpClient;
-        public GetPlaceCoord()
+        public GetPlace()
         {
             _httpClient = new HttpClient
             {
@@ -21,15 +22,29 @@ namespace Doss.Model
 
         public PlaceCoord GetPlaceCoordMethod(string x, string y)
         {
-            var result =  GetRequest<PlaceCoord>($"api/features/?text={x}%20{y}");
+            var result = GetRequestPlaceCooed<PlaceCoord>($"api/features/?text={x}%20{y}");
             return result;
         }
-        private PlaceCoord GetRequest<T>(string url)
+        private PlaceCoord GetRequestPlaceCooed<T>(string url)
         {
             var response =  _httpClient.GetAsync(url).Result;
             response.EnsureSuccessStatusCode();
             var content =  response.Content.ReadAsStringAsync().Result;
             PlaceCoord model = JsonConvert.DeserializeObject<PlaceCoord>(content);
+            return model;
+        }
+
+        public Place Get_Place(string kad_num)
+        {
+            var result = GetRequestPlace<Place>($"api/features/1/{kad_num}");
+            return result;
+        }
+        private Place GetRequestPlace<T>(string url)
+        {
+            var response = _httpClient.GetAsync(url).Result;
+            response.EnsureSuccessStatusCode();
+            var content = response.Content.ReadAsStringAsync().Result;
+            Place model = JsonConvert.DeserializeObject<Place>(content);
             return model;
         }
     }

@@ -17,6 +17,7 @@ using Doss;
 using Esri.ArcGISRuntime.UI;
 using System.Reflection;
 using Doss.Model;
+using Doss.Model2;
 
 namespace Doss.ViewModel
 {
@@ -28,34 +29,40 @@ namespace Doss.ViewModel
         private MapPoint _SelectedLocation;
         private GraphicsOverlay _OverLay;
         private PlaceCoord _SelectedPlaceCoord;
-        private GetPlaceCoord _GetPlaceCoord;
+        private GetPlace _GetPlace;
         private string _Coord;
+        private Place _place;
+        private MainVM _MainViewModel;
+        private bool _IsEnabled_Cad_Map;
+        private bool _IsEnabled_Street_Map;
+        private bool _IsEnabled_Space_Map;
 
         #region prop
-        public Map Map
-        {
-            get { return _map; }
-            set { _map = value; OnPropertyChanged(); }
-        }
-
+        public Map Map {get { return _map; }set { _map = value; OnPropertyChanged(); }}
         public MapView MyMapView { get { return _MyMapView; } set { _MyMapView = value; OnPropertyChanged(); } }
         public MapPoint SelectedLocation { get { return _SelectedLocation; } set { _SelectedLocation = value;OnPropertyChanged(); } }
         public GraphicsOverlay OverLay { get { return _OverLay; } set { _OverLay = value;OnPropertyChanged(); } }
         public PlaceCoord SelectedPlaceCoord { get { return _SelectedPlaceCoord; } set { _SelectedPlaceCoord = value; OnPropertyChanged(); } }
-        public GetPlaceCoord GetPlaceCoordProp { get { return _GetPlaceCoord; } set { _GetPlaceCoord = value; } } 
+        public GetPlace GetPlaceProp { get { return _GetPlace; } set { _GetPlace = value; } } 
         public string Coord { get { return _Coord; } set { _Coord = value; } }
+        public Place _Place { get { return _place; } set { _place = value; OnPropertyChanged(); } }
+        public MainVM MainViewModel { get { return _MainViewModel; } set { _MainViewModel = value; } }
+        public bool IsEnabled_Cad_Map { get { return _IsEnabled_Cad_Map; } set { _IsEnabled_Cad_Map = value; } }
+        public bool IsEnabled_Street_Map { get { return _IsEnabled_Street_Map; } set { _IsEnabled_Street_Map = value;  } }
+        public bool IsEnabled_Space_Map { get { return _IsEnabled_Space_Map; } set { _IsEnabled_Space_Map = value; } }
         #endregion
 
-        public MapVM(MapView MyMapViewFormWin)
+        public MapVM(MapView MyMapViewFormWin, MainVM mainViewModel)
         {
             MyMapView = MyMapViewFormWin;
-            var serviceUri = new Uri("https://pkk5.rosreestr.ru/arcgis/rest/services/Cadastre/Cadastre/MapServer");
-            ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(serviceUri);
-            Map.Basemap.BaseLayers.Add(imageLayer);
+            MainViewModel = mainViewModel;
+            //var serviceUri = new Uri("https://pkk5.rosreestr.ru/arcgis/rest/services/Cadastre/Cadastre/MapServer");
+            //ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(serviceUri);
+            //Map.Basemap.BaseLayers.Add(imageLayer);
             Map.InitialViewpoint = new Viewpoint(54.5293000, 36.2754200, 60000);
             OverLay = new GraphicsOverlay();
             SelectedPlaceCoord = new PlaceCoord();
-            GetPlaceCoordProp = new GetPlaceCoord();
+            GetPlaceProp = new GetPlace();
             MyMapView.GraphicsOverlays.Add(OverLay);
         }
 
@@ -64,8 +71,9 @@ namespace Doss.ViewModel
             SelectedLocation = e.Location;
             ToWGS84();
             await CreatePictureMarker(OverLay);
-            SelectedPlaceCoord = GetPlaceCoordProp.GetPlaceCoordMethod(Coord.Substring(0, 9), Coord.Substring(12, 9));
-            
+            SelectedPlaceCoord = GetPlaceProp.GetPlaceCoordMethod(Coord.Substring(0, 9), Coord.Substring(12, 9));
+            _Place = GetPlaceProp.Get_Place(SelectedPlaceCoord.Features[0].Attrs.Id);
+            MainViewModel.UpdateInfo();
         }
 
         private void ToWGS84()
