@@ -56,9 +56,9 @@ namespace Doss.ViewModel
         {
             MyMapView = MyMapViewFormWin;
             MainViewModel = mainViewModel;
-            //var serviceUri = new Uri("https://pkk5.rosreestr.ru/arcgis/rest/services/Cadastre/Cadastre/MapServer");
-            //ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(serviceUri);
-            //Map.Basemap.BaseLayers.Add(imageLayer);
+            var serviceUri = new Uri("https://pkk5.rosreestr.ru/arcgis/rest/services/Cadastre/Cadastre/MapServer");
+            ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(serviceUri);
+            Map.Basemap.BaseLayers.Add(imageLayer);
             Map.InitialViewpoint = new Viewpoint(54.5293000, 36.2754200, 60000);
             OverLay = new GraphicsOverlay();
             SelectedPlaceCoord = new PlaceCoord();
