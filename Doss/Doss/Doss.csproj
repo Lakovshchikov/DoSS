@@ -176,7 +176,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\marker.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Docs\IDEF0 модель верхнего уровня v.2.png" />
+    <Resource Include="Docs\IDEF0 модель нижнего уровня v.2.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Docs\UI2.png" />
   </ItemGroup>
