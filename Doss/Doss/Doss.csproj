@@ -183,6 +183,12 @@
   <ItemGroup>
     <Resource Include="Docs\UI2.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Docs\IDEF0 модель верхнего уровня v.3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Docs\IDEF0 модель нижнего уровня v.3.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets" Condition="Exists('..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
