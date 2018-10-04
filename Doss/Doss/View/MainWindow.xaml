@@ -130,7 +130,8 @@
                 <Button Grid.Row="2" Content="Показать границы" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="100,5,100,20" Height="25" Background="White"/>
             </Grid>
         </Grid>
-        <esri:MapView x:Name="MyMapView" Map="{Binding Map}" Margin="5,0,5,5" Grid.Column="1" Grid.Row="1"/>
+        <esri:MapView x:Name="MyMapView" Map="{Binding Map}" Margin="5,0,5,5" Grid.Column="1" Grid.Row="1">
+        </esri:MapView>
     </Grid>
     <Window.Resources>
         

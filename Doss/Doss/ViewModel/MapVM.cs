@@ -24,7 +24,7 @@ namespace Doss.ViewModel
     class MapVM : INotifyPropertyChanged
     {
 
-        private Map _map = new Map(Basemap.CreateStreets());
+        private Map _map = new Map();
         private MapView _MyMapView;
         private MapPoint _SelectedLocation;
         private GraphicsOverlay _OverLay;
@@ -55,7 +55,9 @@ namespace Doss.ViewModel
         public MapVM(MapView MyMapViewFormWin, MainVM mainViewModel)
         {
             MyMapView = MyMapViewFormWin;
+            var a = MyMapView.Background;
             MainViewModel = mainViewModel;
+           
             var serviceUri = new Uri("https://pkk5.rosreestr.ru/arcgis/rest/services/Cadastre/Cadastre/MapServer");
             ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(serviceUri);
             Map.Basemap.BaseLayers.Add(imageLayer);
