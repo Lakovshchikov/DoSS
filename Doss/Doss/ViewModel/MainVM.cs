@@ -9,6 +9,7 @@ using Esri.ArcGISRuntime.UI.Controls;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Doss.Model2;
+using System.Windows;
 
 namespace Doss.ViewModel
 {
@@ -45,9 +46,9 @@ namespace Doss.ViewModel
         public MapVM MapViewModel { get { return _MapVM; } set { _MapVM = value; } }
         public MapView MyMapView { get { return _MyMapView; } set { _MyMapView = value; } }
         public Place SelectedPlace { get { return _SelectedPlace; } set { MapViewModel._Place = value;OnPropertyChanged(); } }
-        public bool IsEnabled_Cad_Map { get { return _IsEnabled_Cad_Map; } set { _IsEnabled_Cad_Map = value;OnPropertyChanged(); SetCadMap(); } }
-        public bool IsEnabled_Street_Map { get { return _IsEnabled_Street_Map; } set { _IsEnabled_Street_Map = value; OnPropertyChanged(); SetStreetMap(); } }
-        public bool IsEnabled_Space_Map { get { return _IsEnabled_Space_Map; } set { _IsEnabled_Space_Map = value; OnPropertyChanged(); SetSpaseMap(); } }
+        public bool IsEnabled_Cad_Map { get { return _IsEnabled_Cad_Map; } set { _IsEnabled_Cad_Map = value;OnPropertyChanged();  } }
+        public bool IsEnabled_Street_Map { get { return _IsEnabled_Street_Map; } set { _IsEnabled_Street_Map = value; OnPropertyChanged();  } }
+        public bool IsEnabled_Space_Map { get { return _IsEnabled_Space_Map; } set { _IsEnabled_Space_Map = value; OnPropertyChanged();  } }
 
         #region Info_about_place_prop
         public string Type_LandPlot { get { return _type_LandPlot; } set { _type_LandPlot = value; OnPropertyChanged(); } }
@@ -69,14 +70,36 @@ namespace Doss.ViewModel
 
 
 
-        public MainVM(Action ok, Action close, MapView MyMapViewFormMV) : base(ok, close)
+        public MainVM(Action ok, Action close, MapView MyMapViewFormMV, MainWindow Window) : base(ok, close)
         {
             MyMapView = MyMapViewFormMV;
             MapViewModel = new MapVM(MyMapView,this);
             Map = MapViewModel.Map;
             MyMapView.GeoViewTapped += MapViewModel.SetLocation;
+            Window.Show();
+            Point p_l_u = Window.GridMap.PointToScreen(new Point(0,0/*Window.GridMap.ActualWidth, Window.GridMap.ActualHeight*/));
+            Point p_r_u = new Point(p_l_u.X + Window.GridMap.ActualWidth, p_l_u.Y);
         }
 
+        //public void SelectMap()
+        //{
+        //    if (IsEnabled_Space_Map)
+        //    {
+        //        MapViewModel.Map = new Map(Basemap.CreateImageryWithLabelsVector());
+        //        IsEnabled_Street_Map = false;
+        //    }
+        //    if (IsEnabled_Street_Map)
+        //    {
+        //        MapViewModel.Map = new Map(Basemap.CreateStreetsVector());
+        //        IsEnabled_Space_Map = false;
+        //    }
+        //    if (IsEnabled_Cad_Map)
+        //    {
+        //        ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(MapViewModel.serviceUri);
+        //        MapViewModel.Map.Basemap.BaseLayers.Add(imageLayer);
+        //    }
+        //    //MyMapView.GraphicsOverlays.Add(MapViewModel.OverLay);
+        //}
         public void UpdateInfo()
         {
             Type_LandPlot = "Земельный участок";
@@ -113,7 +136,6 @@ namespace Doss.ViewModel
             ChangeDate_LandPlot = MapViewModel._Place.Feature.Attrs.CadRecordDate;
             LoadingDate_LandPlot = MapViewModel._Place.Feature.Attrs.Adate;
         }
-
         public void SetCadMap()
         {
             if (IsEnabled_Cad_Map)

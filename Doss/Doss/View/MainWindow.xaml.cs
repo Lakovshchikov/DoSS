@@ -1,7 +1,9 @@
 ﻿using Doss.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,11 +23,21 @@ namespace Doss
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainVM(() => this.Close(), null, MyMapView);
+            DataContext = new MainVM(() => this.Close(), null, MyMapView, this);
             
         }
+
+        private void Window_MouseMove(object sender, MouseEventArgs e)
+        {
+            var windowPosition = Mouse.GetPosition(this);
+            var screenPosition = this.PointToScreen(windowPosition);
+            a.Text = string.Format("{0} --- {1}", windowPosition, screenPosition);
+        }
+
     }
 }

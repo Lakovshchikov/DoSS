@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Doss"
         xmlns:local1="clr-namespace:Doss.ViewModel"
         mc:Ignorable="d"
-        Title="Предпроектное проектирование" Height="720" Width="1280" MinHeight="720" MinWidth="1280" WindowStartupLocation="CenterScreen">
+        Title="Предпроектное проектирование" Height="720" Width="1280" MinHeight="720" MinWidth="1280" WindowStartupLocation="CenterScreen" MouseMove="Window_MouseMove">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="350"/>
@@ -17,6 +17,9 @@
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <TextBox Name="a" Grid.Column="1">
+            
+        </TextBox>
         <Menu  Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Background="White">
             <MenuItem Header="Файл">
                 <MenuItem.Icon>
@@ -130,8 +133,10 @@
                 <Button Grid.Row="2" Content="Показать границы" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="100,5,100,20" Height="25" Background="White"/>
             </Grid>
         </Grid>
-        <esri:MapView x:Name="MyMapView" Map="{Binding Map}" Margin="5,0,5,5" Grid.Column="1" Grid.Row="1">
-        </esri:MapView>
+        <Grid Grid.Column="1" x:Name="GridMap" Grid.Row="1" Margin="5,0,5,5">
+            <esri:MapView x:Name="MyMapView" Map="{Binding Map}" Grid.Column="1" Grid.Row="1">
+            </esri:MapView>
+        </Grid>
     </Grid>
     <Window.Resources>
         

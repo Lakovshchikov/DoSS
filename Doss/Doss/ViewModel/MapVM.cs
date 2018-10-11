@@ -14,6 +14,7 @@ using Esri.ArcGISRuntime.Symbology;
 using Esri.ArcGISRuntime.Tasks;
 using Esri.ArcGISRuntime.UI.Controls;
 using Doss;
+using System.Windows;
 using Esri.ArcGISRuntime.UI;
 using System.Reflection;
 using Doss.Model;
@@ -24,7 +25,7 @@ namespace Doss.ViewModel
     class MapVM : INotifyPropertyChanged
     {
 
-        private Map _map = new Map();
+        private Map _map = new Map(Basemap.CreateImagery());
         private MapView _MyMapView;
         private MapPoint _SelectedLocation;
         private GraphicsOverlay _OverLay;
@@ -36,7 +37,7 @@ namespace Doss.ViewModel
         private bool _IsEnabled_Cad_Map;
         private bool _IsEnabled_Street_Map;
         private bool _IsEnabled_Space_Map;
-
+        
         #region prop
         public Map Map {get { return _map; }set { _map = value; OnPropertyChanged(); }}
         public MapView MyMapView { get { return _MyMapView; } set { _MyMapView = value; OnPropertyChanged(); } }
@@ -55,10 +56,8 @@ namespace Doss.ViewModel
         public MapVM(MapView MyMapViewFormWin, MainVM mainViewModel)
         {
             MyMapView = MyMapViewFormWin;
-            var a = MyMapView.Background;
             MainViewModel = mainViewModel;
-           
-            var serviceUri = new Uri("https://pkk5.rosreestr.ru/arcgis/rest/services/Cadastre/Cadastre/MapServer");
+            var serviceUri = new Uri("https://pkk5.rosreestr.ru/arcgis/rest/services/Cadastre/CadastreWMS/MapServer");
             ArcGISMapImageLayer imageLayer = new ArcGISMapImageLayer(serviceUri);
             Map.Basemap.BaseLayers.Add(imageLayer);
             Map.InitialViewpoint = new Viewpoint(54.5293000, 36.2754200, 60000);
@@ -66,7 +65,9 @@ namespace Doss.ViewModel
             SelectedPlaceCoord = new PlaceCoord();
             GetPlaceProp = new GetPlace();
             MyMapView.GraphicsOverlays.Add(OverLay);
+            
         }
+
 
         public async void SetLocation(object sender, GeoViewInputEventArgs e)
         {
