@@ -70,9 +70,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\Const_Request.cs" />
+    <Compile Include="Model\Form_Place.cs" />
     <Compile Include="Model\GetPlaceCoord.cs" />
     <Compile Include="Model\Place.cs" />
     <Compile Include="Model\PlaceCoord.cs" />
+    <Compile Include="Model\Place_Categories.cs" />
+    <Compile Include="Model\TypesOfUse.cs" />
     <Compile Include="Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -191,6 +195,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Docs\IDEF0 модель нижнего уровня v.3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\SelectedPlace\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\export.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets" Condition="Exists('..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets')" />

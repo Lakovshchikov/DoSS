@@ -17,8 +17,7 @@
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox Name="a" Grid.Column="1">
-            
+        <TextBox Name="a" Grid.Column="1" Margin="5,0,500,0">
         </TextBox>
         <Menu  Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Background="White">
             <MenuItem Header="Файл">
@@ -45,13 +44,14 @@
                 <MenuItem.Icon>
                     <Image Source="/Resources/Images/AddMap.png"></Image>
                 </MenuItem.Icon>
-                <MenuItem Header="Кадастровая карта" IsCheckable="True" IsChecked="{Binding IsEnabled_Cad_Map}"/>
-                <MenuItem Header="Карта со спутника" IsCheckable="True" IsChecked="{Binding IsEnabled_Space_Map}"/>
-                <MenuItem Header="Карта улиц" IsCheckable="True" IsChecked="{Binding IsEnabled_Street_Map}"/>
+                <MenuItem Header="Кадастровая карта" IsCheckable="True" IsChecked="{Binding CadMap}" Command="{Binding SetCadMapCommand}"/>
+                <MenuItem Header="Карта со спутника" IsCheckable="True" IsChecked="{Binding SpaceMap}" Command="{Binding SetSpaceMapCommand}"/>
+                <MenuItem Header="Карта улиц" IsCheckable="True" IsChecked="{Binding StreetMap}" Command="{Binding SetStreetMapCommand}"/>
+                <MenuItem Header="Подробная карта улиц" IsCheckable="True" IsChecked="{Binding OpStMap}" Command="{Binding SetOpenStreetMapCommand}" />
             </MenuItem>
         </Menu>
-        
-            <Grid Grid.Column="0" Grid.Row="1">
+
+        <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
@@ -88,6 +88,12 @@
                         </Label.Content>
                     </Label>
                     <TextBox IsReadOnly="True" Text="{Binding Cost_LandPlot}" Height="45"/>
+                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
+                        <Label.Content>
+                            <TextBlock Text="Уточненная площадь:" TextWrapping="Wrap"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox IsReadOnly="True" Text="{Binding AreaValue}" Height="45"/>
                     <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
                         <Label.Content>
                             <TextBlock Text="Разрешенное использование:" TextWrapping="Wrap"/>
@@ -130,11 +136,11 @@
                 </Grid.RowDefinitions>
                 <Label VerticalAlignment="Bottom" Width="280" Content="Границы санитарно-защитной зоны:" Grid.Row="0" HorizontalAlignment="Center" FontSize="14"/>
                 <TextBox Grid.Row="1" Margin="60,15,60,15"/>
-                <Button Grid.Row="2" Content="Показать границы" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="100,5,100,20" Height="25" Background="White"/>
+                <Button Grid.Row="2" Click="Button_Click" Content="Показать границы" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="100,5,100,20" Height="25" Background="White"/>
             </Grid>
         </Grid>
-        <Grid Grid.Column="1" x:Name="GridMap" Grid.Row="1" Margin="5,0,5,5">
-            <esri:MapView x:Name="MyMapView" Map="{Binding Map}" Grid.Column="1" Grid.Row="1">
+        <Grid Grid.Column="1" x:Name="GridMap" Grid.Row="1" Margin="5,0,5,5" >
+            <esri:MapView x:Name="MyMapView" Map="{Binding Map}" Visibility="Visible" Grid.Column="1" Grid.Row="1">
             </esri:MapView>
         </Grid>
     </Grid>

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Doss.Model2;
+using Doss.Model_Forms_Place;
+using System.IO;
 
 namespace Doss.Model
 {
@@ -34,9 +36,9 @@ namespace Doss.Model
             return model;
         }
 
-        public Place Get_Place(string kad_num)
+        public Place Get_Place(string cad_num)
         {
-            var result = GetRequestPlace<Place>($"api/features/1/{kad_num}");
+            var result = GetRequestPlace<Place>($"api/features/1/{cad_num}");
             return result;
         }
         private Place GetRequestPlace<T>(string url)
@@ -47,19 +49,6 @@ namespace Doss.Model
             Place model = JsonConvert.DeserializeObject<Place>(content);
             return model;
         }
+
     }
 }
-//private async Task<T> GetRequest<T>(string url)
-//{
-//    var response = await _httpClient.GetAsync(url);
-//    response.EnsureSuccessStatusCode();
-//    var content = await response.Content.ReadAsStringAsync();
-//    var model = JsonConvert.DeserializeObject<T>(content);
-//    return model;
-//}
-
-//public async Task<PlaceCoord> GetPlaceCoordMethod(string x, string y)
-//{
-//    var result = await GetRequest<PlaceCoord>($"api/features/?text={x}%20{y}");
-//    return result;
-//}
