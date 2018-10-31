@@ -19,7 +19,7 @@ namespace Doss.Model
         {
             _httpClient = new HttpClient
             {
-                BaseAddress = new Uri("https://apkk5.rosreestr.ru")
+                BaseAddress = new Uri("https://pkk5.rosreestr.ru")
             };
         }
 
@@ -30,11 +30,20 @@ namespace Doss.Model
         }
         private Form_Place GetRequestFormPlace<T>(string url)
         {
-            var response = _httpClient.GetAsync(url).Result;
-            response.EnsureSuccessStatusCode();
-            var content = response.Content.ReadAsStringAsync().Result;
-            Form_Place model = JsonConvert.DeserializeObject<Form_Place>(content);
-            return model;
+            try
+            {
+                var response = _httpClient.GetAsync(url).Result;
+                response.EnsureSuccessStatusCode();
+                var content = response.Content.ReadAsStringAsync().Result;
+                Form_Place model = JsonConvert.DeserializeObject<Form_Place>(content);
+                return model;
+            }
+            catch (Exception)
+            {
+                return GetRequestFormPlace<Form_Place>($"arcgis/rest/services/Cadastre/Thematic/MapServer/1?f=pjson");
+                
+            }
+            
         }
         public Place_Categories GetRequestPlaceCategoriesMethod()
         {
@@ -43,11 +52,20 @@ namespace Doss.Model
         }
         private Place_Categories GetRequestPlaceCategories<T>(string url)
         {
-            var response = _httpClient.GetAsync(url).Result;
-            response.EnsureSuccessStatusCode();
-            var content = response.Content.ReadAsStringAsync().Result;
-            Place_Categories model = JsonConvert.DeserializeObject<Place_Categories>(content);
-            return model;
+            try
+            {
+                var response = _httpClient.GetAsync(url).Result;
+                response.EnsureSuccessStatusCode();
+                var content = response.Content.ReadAsStringAsync().Result;
+                Place_Categories model = JsonConvert.DeserializeObject<Place_Categories>(content);
+                return model;
+            }
+            catch (Exception)
+            {
+               return GetRequestPlaceCategories<T>($"arcgis/rest/services/Cadastre/Thematic/MapServer/14?f=pjson");
+                
+            }
+            
         }
         public TypesOf_Use GetRequestTypesOf_UseMethod()
         {
@@ -56,11 +74,20 @@ namespace Doss.Model
         }
         private TypesOf_Use GetRequestTypesOf_Use<T>(string url)
         {
-            var response = _httpClient.GetAsync(url).Result;
-            response.EnsureSuccessStatusCode();
-            var content = response.Content.ReadAsStringAsync().Result;
-            TypesOf_Use model = JsonConvert.DeserializeObject<TypesOf_Use>(content);
-            return model;
+            try
+            {
+                var response = _httpClient.GetAsync(url).Result;
+                response.EnsureSuccessStatusCode();
+                var content = response.Content.ReadAsStringAsync().Result;
+                TypesOf_Use model = JsonConvert.DeserializeObject<TypesOf_Use>(content);
+                return model;
+            }
+            catch (Exception)
+            {
+               return GetRequestTypesOf_Use<TypesOf_Use>($"arcgis/rest/services/Cadastre/Thematic/MapServer/6?f=pjson");
+               
+            }
+            
         }
     }
 }

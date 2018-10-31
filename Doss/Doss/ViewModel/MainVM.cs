@@ -21,6 +21,7 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Windows.Input;
 
+
 namespace Doss.ViewModel
 {
     class MainVM : baseVM, INotifyPropertyChanged
@@ -30,24 +31,26 @@ namespace Doss.ViewModel
         private MapVM _MapVM;
         private MapView _MyMapView;
         private Place _SelectedPlace;
-        //private bool _IsEnabled_Cad_Map;
-        //private bool _IsEnabled_Street_Map;
-        //private bool _IsEnabled_Space_Map;
-        //private bool _IsEnabled_OpenStreet_Map;
         private Point _Left_Top;
         private Point _Right_Bottom;
         private MainWindow _Window;
         private MapPoint _BBox;
         private MapPoint _BBox_Left_Top;
         private MapPoint _BBox_Right_Bottom;
-        private BitmapSource _Image_Sel_Pl;
         private Uri _Img_Uri;
         private Point _CenterPoint;
         private MapPoint _CentMapPoint;
 
+        private MapPoint _mapPointToScale;
+        private double _scale;
+        private bool _borderIsVisible;
+
         private TypesOf_Use _types;
         private Place_Categories _categories;
         private Form_Place _forms;
+
+        // Bitmap для границ
+        private System.Drawing.Bitmap _SelectedPlace_Bitmap;
 
         [DllImport("gdiplus.dll", CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
         internal static extern int GdipGetDpiX(HandleRef graphics, float[] dpi);
@@ -81,18 +84,14 @@ namespace Doss.ViewModel
         public MapVM MapViewModel { get { return _MapVM; } set { _MapVM = value; } }
         public MapView MyMapView { get { return _MyMapView; } set { _MyMapView = value; } }
         public Place SelectedPlace { get { return _SelectedPlace; } set { MapViewModel._Place = value;OnPropertyChanged(); } }
-        //public bool IsEnabled_Cad_Map { get { return _IsEnabled_Cad_Map; } set { _IsEnabled_Cad_Map = value;OnPropertyChanged();  } }
-        //public bool IsEnabled_Street_Map { get { return _IsEnabled_Street_Map; } set { _IsEnabled_Street_Map = value; OnPropertyChanged();  } }
-        //public bool IsEnabled_Space_Map { get { return _IsEnabled_Space_Map; } set { _IsEnabled_Space_Map = value; OnPropertyChanged();  } }
-        //public bool IsEnabled_OpenStreet_Map { get { return _IsEnabled_OpenStreet_Map; } set { _IsEnabled_OpenStreet_Map = value; OnPropertyChanged(); } }
         public Point Left_Top { get { return _Left_Top; } set { _Left_Top = value; } }
         public Point Right_Bottom { get { return _Right_Bottom; } set { _Right_Bottom = value; } }
         public MainWindow MyWindow { get { return _Window; } set { _Window = value; } }
         public MapPoint BBox_Left_Top { get { return _BBox_Left_Top; } set { _BBox_Left_Top = value; } }
         public MapPoint BBox_Right_Bottom { get { return _BBox_Right_Bottom; } set { _BBox_Right_Bottom = value; } }
-        public BitmapSource Image_Sel_Pl { get { return _Image_Sel_Pl; } set { _Image_Sel_Pl = value; OnPropertyChanged(); } }
-
         public Uri Img_Uri { get { return _Img_Uri; } set { _Img_Uri = value; OnPropertyChanged(); } }
+        public System.Drawing.Bitmap SelectedPlace_Bitmap { get { return _SelectedPlace_Bitmap; } set { _SelectedPlace_Bitmap = value; OnPropertyChanged(); } }
+        public double Scale { get { return _scale; } set { _scale = value; OnPropertyChanged(); } }
         #region Info_about_place_prop
         public string Type_LandPlot { get { return _type_LandPlot; } set { _type_LandPlot = value; OnPropertyChanged(); } }
         public string Cad_Num_LandPlot { get {  return _сad_num_LandPlot; } set { _сad_num_LandPlot = value; OnPropertyChanged(); } }
@@ -113,16 +112,6 @@ namespace Doss.ViewModel
         #endregion
 
         #region propdp
-
-        //public Map Map_D
-        //{
-        //    get { return (Map)GetValue(Map_DProperty); }
-        //    set { SetValue(Map_DProperty, value); }
-        //}
-
-        //// Using a DependencyProperty as the backing store for Map_D.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty Map_DProperty =
-        //    DependencyProperty.Register("Map_D", typeof(Map), typeof(MainVM), new PropertyMetadata(new Map()));
 
         #region SelectMap
         public bool CadMap
@@ -178,6 +167,40 @@ namespace Doss.ViewModel
         public static readonly DependencyProperty _AreaValueProperty =
             DependencyProperty.Register("_AreaValue", typeof(string), typeof(MainVM), new PropertyMetadata(""));
 
+        public int _BorderValue
+        {
+            get { return (int)GetValue(_BorderValueProperty); }
+            set { SetValue(_BorderValueProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for _BorderValue.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty _BorderValueProperty =
+            DependencyProperty.Register("_BorderValue", typeof(int), typeof(MainVM), new PropertyMetadata(0));
+
+        public bool Status
+        {
+            get { return (bool)GetValue(StatusProperty); }
+            set { SetValue(StatusProperty, value); StatusBarTextChange(); }
+        }
+
+        // Using a DependencyProperty as the backing store for Status.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty StatusProperty =
+            DependencyProperty.Register("Status", typeof(bool), typeof(MainVM), new PropertyMetadata(false));
+
+
+        public string _StatusBarText
+        {
+            get { return (string)GetValue(_StatusBarTextProperty); }
+            set { SetValue(_StatusBarTextProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for _StatusBarText.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty _StatusBarTextProperty =
+            DependencyProperty.Register("_StatusBarText", typeof(string), typeof(MainVM), new PropertyMetadata("Подключение к сервисам росреестра. Пожалуйста подождите"));
+
+
+
+
 
 
 
@@ -200,11 +223,9 @@ namespace Doss.ViewModel
             SetStreetMapCommand = new Command(SetStreetMap, () => true);
             SetOpenStreetMapCommand = new Command(SetOpenStreetMap, () => true);
             SetSpaceMapCommand = new Command(SetSpaceMap, () => true);
+            SetBorderCommand = new Command(SetBorder, () => true);
 
-            Const_Request CR = new Const_Request();
-            _forms = CR.GetRequestFormPlaceMethod();
-            _categories = CR.GetRequestPlaceCategoriesMethod();
-            _types = CR.GetRequestTypesOf_UseMethod();
+            new Thread(() => DownloadInfo()).Start();
             #region dpi
             //var dpiXProperty = typeof(SystemParameters).GetProperty("DpiX", BindingFlags.NonPublic | BindingFlags.Static);
             //var dpiYProperty = typeof(SystemParameters).GetProperty("Dpi", BindingFlags.NonPublic | BindingFlags.Static);
@@ -216,18 +237,22 @@ namespace Doss.ViewModel
         }
 
 
-
-        //To DO
-        //2. Выбор карт
-        //3. сделать нормально свойства
-
         private void NavigationCompleted(object sender, EventArgs e)
         {
             SetBBox();
-            UpdateImg(BBox_Left_Top.X, BBox_Right_Bottom.X, BBox_Right_Bottom.Y, BBox_Left_Top.Y, MapViewModel._Place, ((int)_Window.GridMap.ActualWidth).ToString(), ((int)_Window.GridMap.ActualHeight).ToString());
+            _Img_Uri= UpdateImgUri(BBox_Left_Top, BBox_Right_Bottom, MapViewModel._Place, ((int)_Window.GridMap.ActualWidth).ToString(), ((int)_Window.GridMap.ActualHeight).ToString());
+            UpdateMapPointToScale();
             if (_MapVM.SelectedLocation != null)
             {
-                _MapVM.CreatePictureMarker(_MapVM.OverLay).Wait();
+                _MapVM.CreatePictureMarker(_MapVM.OverLay,Img_Uri).Wait();
+                if (_borderIsVisible)
+                {
+                    //new Thread(() => _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri)).Start();
+                    _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri);
+                }
+                //Thread.Sleep(5000);
+                //_MapVM.CreatePictureMarker(_MapVM.OverLay, _Img_Border_Uri).Wait();
+               // _MapVM.CreateMarker(_MapVM.OverLay, CenterPoint).Wait();
             }
         }
         private void MouseWhell(object sender, MouseEventArgs e)
@@ -248,6 +273,12 @@ namespace Doss.ViewModel
             _Left_Top.X = 0;
             _Left_Top.Y = 0;
             _BBox_Left_Top = _MyMapView.ScreenToLocation(_Left_Top);
+            
+            //if (_MapVM.SelectedLocation != null)
+            //{
+            //    //ResetBBPoint(UpdateMapPointToScale());
+            //    UpdateMapPointToScale();
+            //}
             _BBox_Right_Bottom = _MyMapView.ScreenToLocation(_Right_Bottom);
             #region Старые расчеты с кликом
             //_Left_Top.X = _Left_Top.X + _Left_Top.X * 0.005;
@@ -267,15 +298,15 @@ namespace Doss.ViewModel
             //_MyMapView.GeoViewTapped += MapViewModel.SetLocation;
             #endregion
         }
-        public void UpdateImg(double _Xmin, double _Xmax, double _Ymin, double _Ymax, Place SelectedPlace,string size_h, string size_w)
+        public Uri UpdateImgUri(MapPoint LeftTop_Point, MapPoint RightBottom_Point, Place SelectedPlace,string size_h, string size_w)
         {
             try
             {
                 #region Форматирование
-                string Xmin = toStr(_Xmin);
-                string Xmax = toStr(_Xmax);
-                string Ymin = toStr(_Ymin);
-                string Ymax = toStr(_Ymax);
+                string Xmin = toStr(LeftTop_Point.X);
+                string Xmax = toStr(RightBottom_Point.X);
+                string Ymin = toStr(LeftTop_Point.Y);
+                string Ymax = toStr(RightBottom_Point.Y);
 
                 string okrug = SelectedPlace.Feature.Attrs.Okrug.ToString();
                 string rayon = SelectedPlace.Feature.Attrs.Rayon.ToString().Substring(SelectedPlace.Feature.Attrs.Rayon.ToString().IndexOf(':') + 1, SelectedPlace.Feature.Attrs.Rayon.ToString().Length - SelectedPlace.Feature.Attrs.Rayon.ToString().IndexOf(':') - 1);
@@ -283,16 +314,14 @@ namespace Doss.ViewModel
                 string id = SelectedPlace.Feature.Attrs.AnnoText.ToString();
                 //string num2
                 #endregion
-
-
-
                 string url = string.Format("arcgis/rest/services/Cadastre/CadastreSelected/MapServer/export?dpi=96&transparent=true&format=png32&layers=show%3A6%2C7&bbox={0}%2C{1}%2C{2}%2C{3}&bboxSR=102100&imageSR=102100&size={12}%2C{13}&layerDefs=%7B%226%22%3A%22ID%20%3D%20%27{4}%3A{5}%3A{6}%3A{7}%27%22%2C%227%22%3A%22ID%20%3D%20%27{8}%3A{9}%3A{10}%3A{11}%27%22%7D&f=image", Xmin, Ymin, Xmax, Ymax, okrug, rayon, kvartal, id, okrug, rayon, kvartal, id, size_h, size_w);
-                _Img_Uri = new Uri("https://pkk5.rosreestr.ru/" + url);
-                Image_Sel_Pl = new BitmapImage(_Img_Uri);
+                Uri result = new Uri("https://pkk5.rosreestr.ru/" + url);
+                return result;
             }
             catch (Exception)
             {
-                _Image_Sel_Pl = null;
+                
+                return null;
                 //throw;
             }
         }      
@@ -355,6 +384,26 @@ namespace Doss.ViewModel
             StartDate_LandPlot = MapViewModel._Place.Feature.Attrs.DateCreate;
             ChangeDate_LandPlot = MapViewModel._Place.Feature.Attrs.CadRecordDate;
             LoadingDate_LandPlot = MapViewModel._Place.Feature.Attrs.Adate;
+        }
+        public void UpdateMapPointToScale()
+        {
+            Point secondP = new Point(0, 1);
+            _mapPointToScale = _MyMapView.ScreenToLocation(secondP);
+            Scale = GeometryEngine.Distance(_BBox_Left_Top, _mapPointToScale) / 1.735;
+            //return a;
+        }
+
+        public void DownloadInfo()
+        {
+            Const_Request CR = new Const_Request();
+            _forms = CR.GetRequestFormPlaceMethod();
+            _categories = CR.GetRequestPlaceCategoriesMethod();
+            _types = CR.GetRequestTypesOf_UseMethod();
+            if (_forms != null && _categories != null && _types !=null)
+            {
+                Dispatcher.BeginInvoke(new ThreadStart(delegate { Status = true; }));
+            }
+            
         }
 
         #region Mouse_Click
@@ -440,11 +489,18 @@ namespace Doss.ViewModel
         }
         #endregion
 
+        private void SetBorder()
+        {
+            //new Thread(() => _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri)).Start();
+            _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri);
+            _borderIsVisible = true;
+    }
         #region command
         public Command SetCadMapCommand { get; set; }
         public Command SetStreetMapCommand { get; set; }
         public Command SetOpenStreetMapCommand { get; set; }
         public Command SetSpaceMapCommand { get; set; }
+        public Command SetBorderCommand { get; set; }
         #endregion
 
         #region INotifyPropertyChanged
@@ -457,5 +513,17 @@ namespace Doss.ViewModel
 
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
+
+        private void StatusBarTextChange()
+        {
+            if (Status == true)
+            {
+                _StatusBarText = "Загрузка завершена. Рабочая область готова для использования";
+            }
+            else
+            {
+                _StatusBarText = "Подключение к сервисам росреестра. Пожалуйста подождите";
+            }
+        }
     }
 }

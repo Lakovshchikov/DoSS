@@ -24,30 +24,48 @@ namespace Doss.Model
 
         public PlaceCoord GetPlaceCoordMethod(string x, string y)
         {
-            var result = GetRequestPlaceCooed<PlaceCoord>($"api/features/?text={x}%20{y}");
+            var result = GetRequestPlaceCooed<PlaceCoord>($"api/features/?text={x}%20{y}",x,y);
             return result;
         }
-        private PlaceCoord GetRequestPlaceCooed<T>(string url)
+        private PlaceCoord GetRequestPlaceCooed<T>(string url, string x, string y)
         {
-            var response =  _httpClient.GetAsync(url).Result;
-            response.EnsureSuccessStatusCode();
-            var content =  response.Content.ReadAsStringAsync().Result;
-            PlaceCoord model = JsonConvert.DeserializeObject<PlaceCoord>(content);
-            return model;
+            try
+            {             
+                var response = _httpClient.GetAsync(url).Result;
+                response.EnsureSuccessStatusCode();
+                var content = response.Content.ReadAsStringAsync().Result;
+                PlaceCoord model = JsonConvert.DeserializeObject<PlaceCoord>(content);
+                return model;
+            }
+            catch (Exception)
+            {
+                return GetRequestPlaceCooed<PlaceCoord>($"api/features/?text={x}%20{y}",x,y);
+                //throw;
+            }
+           
         }
 
         public Place Get_Place(string cad_num)
         {
-            var result = GetRequestPlace<Place>($"api/features/1/{cad_num}");
+            var result = GetRequestPlace<Place>($"api/features/1/{cad_num}",cad_num);
             return result;
         }
-        private Place GetRequestPlace<T>(string url)
+        private Place GetRequestPlace<T>(string url,string cad_num)
         {
-            var response = _httpClient.GetAsync(url).Result;
-            response.EnsureSuccessStatusCode();
-            var content = response.Content.ReadAsStringAsync().Result;
-            Place model = JsonConvert.DeserializeObject<Place>(content);
-            return model;
+            try
+            {
+                var response = _httpClient.GetAsync(url).Result;
+                response.EnsureSuccessStatusCode();
+                var content = response.Content.ReadAsStringAsync().Result;
+                Place model = JsonConvert.DeserializeObject<Place>(content);
+                return model;
+            }
+            catch (Exception)
+            {
+
+                return GetRequestPlace<T>($"api/features/1/{cad_num}",cad_num);
+            }
+
         }
 
     }

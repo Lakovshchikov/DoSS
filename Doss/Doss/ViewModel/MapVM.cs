@@ -21,6 +21,7 @@ using Doss.Model;
 using Doss.Model2;
 using System.Threading;
 using System.IO;
+using System.Windows.Threading;
 
 namespace Doss.ViewModel
 {
@@ -81,16 +82,21 @@ namespace Doss.ViewModel
         }
 
 
-        public async void SetLocation(object sender, GeoViewInputEventArgs e)
+        public void SetLocation(object sender, GeoViewInputEventArgs e)
         {
+            SelectedLocation = e.Location;
+            new Thread(() => SetLocationThread()).Start();
 
-            SelectedLocation = e.Location;          
-            ToWGS84();          
+        }
+
+        private void SetLocationThread()
+        {
+            ToWGS84();
             SelectedPlaceCoord = GetPlaceProp.GetPlaceCoordMethod(Coord.Substring(0, 9), Coord.Substring(12, 9));
             _Place = GetPlaceProp.Get_Place(SelectedPlaceCoord.Features[0].Attrs.Id);
             MainViewModel.UpdateInfo();
-            MainViewModel.UpdateImg(MainViewModel.BBox_Left_Top.X, MainViewModel.BBox_Right_Bottom.X, MainViewModel.BBox_Right_Bottom.Y, MainViewModel.BBox_Left_Top.Y, MainViewModel.MapViewModel._Place, ((int)MainViewModel.MyWindow.GridMap.ActualWidth).ToString(), ((int)MainViewModel.MyWindow.GridMap.ActualHeight).ToString());
-            await CreatePictureMarker(OverLay);
+            MainViewModel.Img_Uri = MainViewModel.UpdateImgUri(MainViewModel.BBox_Left_Top, MainViewModel.BBox_Right_Bottom, MainViewModel.MapViewModel._Place, ((int)MainViewModel.MyWindow.GridMap.ActualWidth).ToString(), ((int)MainViewModel.MyWindow.GridMap.ActualHeight).ToString());
+            CreatePictureMarker(OverLay, MainViewModel.Img_Uri).Wait();
         }
 
         #region SelectMap
@@ -127,29 +133,63 @@ namespace Doss.ViewModel
             Coord = CoordinateFormatter.ToLatitudeLongitude(SelectedLocation, LatitudeLongitudeFormat.DecimalDegrees, 6);
         }
 
-        public async Task CreatePictureMarker(GraphicsOverlay overlay)
+        public async Task CreatePictureMarker(GraphicsOverlay overlay, Uri _uri)
         {
             overlay.Graphics.Clear();
-            #region AddMark
-            //var currentAssembly = Assembly.GetExecutingAssembly();
-            //var resourceStream = currentAssembly.GetManifestResourceStream(
-            //    "Doss.Resources.marker.png");
-            //PictureMarkerSymbol pinSymbol = await PictureMarkerSymbol.CreateAsync(resourceStream);
-            //pinSymbol.Width = 40;
-            //pinSymbol.Height = 40;
-            //MapPoint pinPoint = new MapPoint(SelectedLocation.X, SelectedLocation.Y, SpatialReferences.WebMercator);
-            //Graphic pinGraphic = new Graphic(pinPoint, pinSymbol);
-            //overlay.Graphics.Add(pinGraphic);
-            #endregion
-            var resourceStream = GetStreamFromUrl(MainViewModel.Img_Uri.ToString());
+            var resourceStream = GetStreamFromUrl(_uri.ToString());
+            CreateBitMap_SelPl(_uri);
             PictureMarkerSymbol pinSymbol = await PictureMarkerSymbol.CreateAsync(resourceStream);
             pinSymbol.Width = MainViewModel.MyWindow.GridMap.ActualWidth;
             pinSymbol.Height = MainViewModel.MyWindow.GridMap.ActualHeight;
             MapPoint pinPoint = MainViewModel.CenterPoint;
             Graphic pinGraphic = new Graphic(pinPoint, pinSymbol);
             overlay.Graphics.Add(pinGraphic);
+            overlay.Graphics[0].ZIndex = 2;
+            overlay.Opacity = 0.5;
         }
+        public async Task CreatePictureBorder(GraphicsOverlay overlay, Uri _uri)
+        {
+            
+            var resourceStream = GetStreamFromUrl(_uri.ToString());
+            CreateBitMap_SelPl(_uri);
+            ImageWork IW =  new ImageWork(MainViewModel.SelectedPlace_Bitmap, MainViewModel.Scale, MainViewModel._BorderValue);
+            byte[] border_img = await IW.CreateImg();
+            PictureMarkerSymbol pinSymbol =  new PictureMarkerSymbol(new RuntimeImage(border_img));
+            pinSymbol.Width = MainViewModel.MyWindow.GridMap.ActualWidth;
+            pinSymbol.Height = MainViewModel.MyWindow.GridMap.ActualHeight;
 
+            MapPoint pinPoint = MyMapView.ScreenToLocation(IW.CenterPlace);
+
+            Graphic pinGraphic = new Graphic(pinPoint, pinSymbol);
+            overlay.Graphics.Add(pinGraphic);
+            overlay.Graphics[1].ZIndex = 1;
+            overlay.Opacity = 0.5;
+        }
+        public async Task CreateMarker(GraphicsOverlay overlay, MapPoint _MapPoint)
+        {
+            //маркер на карте
+            //overlay.Graphics.Clear();
+
+            #region AddMark
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            var resourceStream = currentAssembly.GetManifestResourceStream(
+                "Doss.Resources.marker.png");
+            PictureMarkerSymbol pinSymbol = await PictureMarkerSymbol.CreateAsync(resourceStream);
+            pinSymbol.Width = 40;
+            pinSymbol.Height = 40;
+            Graphic pinGraphic = new Graphic(_MapPoint, pinSymbol);
+            overlay.Graphics.Add(pinGraphic);
+            #endregion
+        }
+        private void CreateBitMap_SelPl(Uri u)
+        {
+            System.Net.WebRequest request =
+        System.Net.WebRequest.Create(u.ToString());
+            System.Net.WebResponse response = request.GetResponse();
+            System.IO.Stream responseStream =
+                response.GetResponseStream();
+            MainViewModel.SelectedPlace_Bitmap = new System.Drawing.Bitmap(responseStream);
+        }
         private MemoryStream GetStreamFromUrl(string url)
         {
             byte[] imageData = null;

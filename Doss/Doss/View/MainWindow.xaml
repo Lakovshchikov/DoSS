@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <TextBox Name="a" Grid.Column="1" Margin="5,0,500,0">
         </TextBox>
@@ -102,12 +103,12 @@
                     <TextBox IsReadOnly="True" Text="{Binding PermirredUse_LandPlot}" Height="45"/>
                     <Label Content="По документу:" Height="100" BorderBrush="Black" BorderThickness="0.5"/>
                     <TextBox IsReadOnly="True" Text="{Binding Doc_LandPlot}" Height="100"/>
-                    <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
+                    <!--<Label Height="45" BorderBrush="Black" BorderThickness="0.5">
                         <Label.Content>
                             <TextBlock Text="Кадастровый инженер:" TextWrapping="Wrap"/>
                         </Label.Content>
                     </Label>
-                    <TextBox IsReadOnly="True" Text="{Binding CadEng_LandPlot}" Height="45"/>
+                    <TextBox IsReadOnly="True" Text="{Binding CadEng_LandPlot}" Height="45"/>-->
                     <Label Height="45" BorderBrush="Black" BorderThickness="0.5">
                         <Label.Content>
                             <TextBlock Text="Дата установки на учет:" TextWrapping="Wrap"/>
@@ -129,20 +130,36 @@
                 </WrapPanel>
             </ScrollViewer>
             <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label VerticalAlignment="Bottom" Width="280" Content="Границы санитарно-защитной зоны:" Grid.Row="0" HorizontalAlignment="Center" FontSize="14"/>
-                <TextBox Grid.Row="1" Margin="60,15,60,15"/>
-                <Button Grid.Row="2" Click="Button_Click" Content="Показать границы" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="100,5,100,20" Height="25" Background="White"/>
+                <Label Grid.ColumnSpan="2" VerticalAlignment="Bottom" Width="280" Content="Границы санитарно-защитной зоны:" Grid.Row="0" HorizontalAlignment="Center" FontSize="14"/>
+                <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding _BorderValue}" Margin="80,10,80,0" Height="30" VerticalAlignment="Top"/>
+                <Button Grid.Row="2" Grid.Column="0" Command="{Binding SetBorderCommand}" Content="Показать границы" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" Height="25" Width="120" Background="White"/>
+                <Button Grid.Row="2" Grid.Column="1" Command="{Binding }" Content="Скрыть границы" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" Height="25" Width="120" Background="White"/>
             </Grid>
         </Grid>
         <Grid Grid.Column="1" x:Name="GridMap" Grid.Row="1" Margin="5,0,5,5" >
             <esri:MapView x:Name="MyMapView" Map="{Binding Map}" Visibility="Visible" Grid.Column="1" Grid.Row="1">
             </esri:MapView>
         </Grid>
+        <Grid Grid.Column="1" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Margin="5,5,5,5" HorizontalAlignment="Left" BorderThickness="0" IsReadOnly="True" Width="auto" Text="{Binding _StatusBarText}">
+            </TextBox>
+        </Grid >
+
+            
+
     </Grid>
     <Window.Resources>
         

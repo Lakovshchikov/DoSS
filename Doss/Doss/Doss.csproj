@@ -37,6 +37,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Emgu.CV.UI, Version=3.4.3.3016, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <HintPath>..\packages\EMGU.CV.3.4.3.3016\lib\net35\Emgu.CV.UI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Emgu.CV.World, Version=3.4.3.3016, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <HintPath>..\packages\EMGU.CV.3.4.3.3016\lib\net35\Emgu.CV.World.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Esri.ArcGISRuntime, Version=100.3.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <HintPath>..\packages\Esri.ArcGISRuntime.WPF.100.3.0\lib\net461\Esri.ArcGISRuntime.dll</HintPath>
       <Private>True</Private>
@@ -64,6 +72,10 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="ZedGraph, Version=5.1.7.430, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZedGraph.5.1.7\lib\net35-Client\ZedGraph.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -71,6 +83,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\Const_Request.cs" />
+    <Compile Include="Model\DatePoint.cs" />
     <Compile Include="Model\Form_Place.cs" />
     <Compile Include="Model\GetPlaceCoord.cs" />
     <Compile Include="Model\Place.cs" />
@@ -92,6 +105,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\Command.cs" />
+    <Compile Include="ViewModel\ImageWork.cs" />
     <Compile Include="ViewModel\MainVM.cs" />
     <Compile Include="ViewModel\MapVM.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
@@ -181,9 +195,6 @@
     <Resource Include="Docs\Концептуальна схема v.1.1.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\marker.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Docs\IDEF0 модель верхнего уровня v.2.png" />
     <Resource Include="Docs\IDEF0 модель нижнего уровня v.2.png" />
   </ItemGroup>
@@ -202,6 +213,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\export.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\marker.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="License-LGPL.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets" Condition="Exists('..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -209,7 +226,9 @@
       <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Esri.ArcGISRuntime.WPF.100.3.0\build\net461\Esri.ArcGISRuntime.WPF.targets'))" />
+    <Error Condition="!Exists('..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets'))" />
   </Target>
+  <Import Project="..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
