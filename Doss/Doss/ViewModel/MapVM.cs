@@ -21,7 +21,10 @@ using Doss.Model;
 using Doss.Model2;
 using System.Threading;
 using System.IO;
+using Microsoft.Win32;
 using System.Windows.Threading;
+using Emgu.CV;
+using Emgu.CV.Structure;
 
 namespace Doss.ViewModel
 {
@@ -43,6 +46,8 @@ namespace Doss.ViewModel
         private bool _IsEnabled_Space_Map;
         private bool _IsEnabled_OpenStreet_Map;
         private Uri serviceUri;
+        private ImageWork ImageWorks;
+
 
         #region prop
         public Map Map {get { return _map; }set { _map = value; OnPropertyChanged(); }}
@@ -137,7 +142,7 @@ namespace Doss.ViewModel
         {
             overlay.Graphics.Clear();
             var resourceStream = GetStreamFromUrl(_uri.ToString());
-            CreateBitMap_SelPl(_uri);
+            MainViewModel.SelectedPlace_Bitmap = CreateBitMap_FromUri(_uri);
             PictureMarkerSymbol pinSymbol = await PictureMarkerSymbol.CreateAsync(resourceStream);
             pinSymbol.Width = MainViewModel.MyWindow.GridMap.ActualWidth;
             pinSymbol.Height = MainViewModel.MyWindow.GridMap.ActualHeight;
@@ -151,45 +156,37 @@ namespace Doss.ViewModel
         {
             
             var resourceStream = GetStreamFromUrl(_uri.ToString());
-            CreateBitMap_SelPl(_uri);
-            ImageWork IW =  new ImageWork(MainViewModel.SelectedPlace_Bitmap, MainViewModel.Scale, MainViewModel._BorderValue);
-            byte[] border_img = await IW.CreateImg();
-            PictureMarkerSymbol pinSymbol =  new PictureMarkerSymbol(new RuntimeImage(border_img));
+            CreateBitMap_FromUri(_uri);
+            ImageWorks =  new ImageWork(MainViewModel.SelectedPlace_Bitmap, MainViewModel.Scale, MainViewModel._BorderValue);
+            byte[] border_Img = await ImageWorks.CreateImg();
+            PictureMarkerSymbol pinSymbol =  new PictureMarkerSymbol(new RuntimeImage(border_Img));
             pinSymbol.Width = MainViewModel.MyWindow.GridMap.ActualWidth;
             pinSymbol.Height = MainViewModel.MyWindow.GridMap.ActualHeight;
-
-            MapPoint pinPoint = MyMapView.ScreenToLocation(IW.CenterPlace);
-
+            MapPoint pinPoint = MyMapView.ScreenToLocation(ImageWorks.CenterPlace);
             Graphic pinGraphic = new Graphic(pinPoint, pinSymbol);
             overlay.Graphics.Add(pinGraphic);
             overlay.Graphics[1].ZIndex = 1;
             overlay.Opacity = 0.5;
         }
-        public async Task CreateMarker(GraphicsOverlay overlay, MapPoint _MapPoint)
-        {
-            //маркер на карте
-            //overlay.Graphics.Clear();
 
-            #region AddMark
-            var currentAssembly = Assembly.GetExecutingAssembly();
-            var resourceStream = currentAssembly.GetManifestResourceStream(
-                "Doss.Resources.marker.png");
-            PictureMarkerSymbol pinSymbol = await PictureMarkerSymbol.CreateAsync(resourceStream);
-            pinSymbol.Width = 40;
-            pinSymbol.Height = 40;
-            Graphic pinGraphic = new Graphic(_MapPoint, pinSymbol);
-            overlay.Graphics.Add(pinGraphic);
-            #endregion
+        public void ReseachBorder()
+        {
+            OpenFileDialog _openFileDialog = new OpenFileDialog()
+            { FileName = System.AppDomain.CurrentDomain.BaseDirectory + @"PKK.png" };
+            ImageWorks.WorkWithCad(_openFileDialog);
         }
-        private void CreateBitMap_SelPl(Uri u)
+
+        private System.Drawing.Bitmap CreateBitMap_FromUri(Uri u)
         {
             System.Net.WebRequest request =
-        System.Net.WebRequest.Create(u.ToString());
+            System.Net.WebRequest.Create(u.ToString());
             System.Net.WebResponse response = request.GetResponse();
             System.IO.Stream responseStream =
-                response.GetResponseStream();
-            MainViewModel.SelectedPlace_Bitmap = new System.Drawing.Bitmap(responseStream);
+            response.GetResponseStream();
+            var result = new System.Drawing.Bitmap(responseStream);
+            return result;
         }
+       
         private MemoryStream GetStreamFromUrl(string url)
         {
             byte[] imageData = null;
@@ -228,5 +225,21 @@ namespace Doss.ViewModel
 
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
+        //public async Task CreateMarker(GraphicsOverlay overlay, MapPoint _MapPoint)
+        //{
+        //    //маркер на карте
+        //    //overlay.Graphics.Clear();
+
+        //    #region AddMark
+        //    var currentAssembly = Assembly.GetExecutingAssembly();
+        //    var resourceStream = currentAssembly.GetManifestResourceStream(
+        //        "Doss.Resources.marker.png");
+        //    PictureMarkerSymbol pinSymbol = await PictureMarkerSymbol.CreateAsync(resourceStream);
+        //    pinSymbol.Width = 40;
+        //    pinSymbol.Height = 40;
+        //    Graphic pinGraphic = new Graphic(_MapPoint, pinSymbol);
+        //    overlay.Graphics.Add(pinGraphic);
+        //    #endregion
+        //}
     }
 }

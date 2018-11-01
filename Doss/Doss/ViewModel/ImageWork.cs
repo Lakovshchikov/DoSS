@@ -15,6 +15,7 @@ using System.ComponentModel;
 using Microsoft.Win32;
 using System.Windows.Media.Imaging;
 using Doss.Model;
+using Microsoft.Win32;
 
 namespace Doss.ViewModel
 {
@@ -47,6 +48,12 @@ namespace Doss.ViewModel
         public BitmapSource ImagePKKBitMapSource { get { return _ImagePKKBitMapSource; } set { _ImagePKKBitMapSource = value; } }
         public System.Windows.Point CenterPlace { get; set; }
 
+        #endregion
+
+        #region RGB const
+        private int[] Rcolors = new int[] { 245, 168, 184,233, 184,234,198,211,223,253,255};
+        private int[] Gcolors = new int[] { 238, 0, 105, 199, 105, 220, 146, 175, 199,253,255 };
+        private int[] Bcolors = new int[] { 238, 0, 105, 199, 105, 220, 146, 175, 199, 253, 255 };
         #endregion
         public ImageWork(Bitmap input_img, double _scale, int _border)
         {
@@ -140,6 +147,7 @@ namespace Doss.ViewModel
             BigImg = DrawBorder(BigImg);
             //рисунок границ СЗЗ совмещается с выходныс изображением (цветное)
             BigImg_Color = SummImg(BigImg_Color, BigImg);
+            _ImageWithBorder = BigImg_Color;
 
             //Image<> to Bitmapsource
             ImageOutBitMap = ToBitmapSource(BigImg_Color);
@@ -149,13 +157,403 @@ namespace Doss.ViewModel
             //Прозрачность
             var color = System.Drawing.Color.Black;
             result_img.MakeTransparent(color);
-           // result_img.Save("result.png");
-
+            // result_img.Save("result.png");
+            //WorkWithCad();
             ImageConverter converter = new ImageConverter();
             byte[] res_img = (byte[])converter.ConvertTo(result_img, typeof(byte[]));
             return res_img;
+
         }
 
+        public void WorkWithCad(OpenFileDialog _ofd)
+        {
+            _ImagePKK = new Image<Bgr, Byte>(_ofd.FileName);
+
+            Image<Gray, byte> ResultImage;
+            if (ImageIn != null)
+            {
+                ResultImage = MoveBorderToPlace();
+            }
+            else
+            {
+                ResultImage = new Image<Gray, byte>(_ImagePKK.Width, _ImagePKK.Height);
+            }
+            ResultImage = MovePKKtoPlace(ResultImage, _ImagePKK);
+            ResultImage = WhiteAroundBorder(ResultImage);
+
+            _ImageForFill = ResultImage.Copy();
+            DatePoint BlackPoint = FoundBlackPoint(_ImageForFill);
+            Fill(BlackPoint._x, BlackPoint._y);
+
+            
+            //ImageOutBitMapToPKK = ToBitmapSource(_ImageForFill);
+            //SaveClipboardImageToFile("img13.png", ImageOutBitMapToPKK);
+            //RaisePropertyChanged("ImageOutBitMapToPKK");
+
+        }
+
+        #region Работа с ПКК
+
+        private void Fill(int x, int y)
+        {
+            if (x >= 0 && x < _ImageForFill.Width && y >= 0 && y < _ImageForFill.Height && _ImageForFill.Data[y, x, 0] == 0 && _ImageForFill.Data[y, x, 0] != 255)
+            {
+                _ImageForFill.Data[y, x, 0] = 255;
+                Fill(x + 1, y);
+                Fill(x - 1, y);
+                Fill(x, y - 1);
+                Fill(x, y + 1);
+            }
+
+        }
+
+        private DatePoint FoundBlackPoint(Image<Gray, byte> image)
+        {
+            DatePoint result = new DatePoint();
+            result._x = -1;
+
+            for (int i = 0; i < image.Height; i++)
+            {
+                for (int j = 0; j < image.Width; j++)
+                {
+                    if (image.Data[i, j, 0] != 255)
+                    {
+                        result._x = j;
+                        result._y = i;
+                        result._z = j;
+                        result._value = 0;
+                        break;
+                    }
+                }
+                if (result._x != -1)
+                {
+                    break;
+                }
+            }
+
+            return result;
+        }
+        private Image<Gray, byte> WhiteAroundBorder(Image<Gray, byte> image)
+        {
+            List<DatePoint> pointsToWhite = new List<DatePoint>();
+            List<List<DatePoint>> pointsBorder = new List<List<DatePoint>>();
+            #region Разбивка точек границ по линиям
+            var list = ListBorderPonts.OrderBy(x => x._y).ThenBy(x => x._x);
+            int BreakPoint = 0;
+            int k = 0;
+            ListBorderPonts = list.ToList();
+            while (BreakPoint <= ListBorderPonts.Count - 1)
+            {
+                pointsBorder.Add(new List<DatePoint>());
+                for (int i = BreakPoint; i <= ListBorderPonts.Count - 1; i++)
+                {
+                    if (i != ListBorderPonts.Count - 1)
+                    {
+                        if (ListBorderPonts[i]._y == ListBorderPonts[i + 1]._y)
+                        {
+                            pointsBorder[k].Add(ListBorderPonts[i]);
+                        }
+                        else
+                        {
+                            pointsBorder[k].Add(ListBorderPonts[i]);
+                            BreakPoint = i + 1;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        pointsBorder[k].Add(ListBorderPonts[i]);
+                        BreakPoint = i + 1;
+                        break;
+                    }
+                }
+                k++;
+            }
+            #endregion
+            #region Белые точки вокруг
+            //Точки сверху
+            for (int i = 0; i < pointsBorder.First().First()._y; i++)
+            {
+                for (int j = 0; j < image.Width; j++)
+                {
+                    image.Data[i, j, 0] = 255;
+                }
+            }
+            //Точки снизу
+            for (int i = pointsBorder.Last().First()._y; i < image.Height; i++)
+            {
+                for (int j = 0; j < image.Width; j++)
+                {
+                    image.Data[i, j, 0] = 255;
+                }
+            }
+            //Точки слева
+            int z = 0;
+            for (int i = pointsBorder.First().First()._y; i < pointsBorder.Last().First()._y; i++)
+            {
+                for (int j = 0; j < pointsBorder[z].First()._x; j++)
+                {
+                    image.Data[i, j, 0] = 255;
+                }
+                z++;
+            }
+            //Точки справа
+            z = 0;
+            for (int i = pointsBorder.First().First()._y; i < pointsBorder.Last().First()._y; i++)
+            {
+                for (int j = pointsBorder[z].Last()._x; j < image.Width; j++)
+                {
+                    image.Data[i, j, 0] = 255;
+                }
+                z++;
+            }
+            #endregion
+            return image;
+        }
+
+        private Image<Gray, byte> MoveBorderToPlace()
+        {
+            Image<Gray, byte> ImageInGray = ImageIn.Convert<Gray, byte>();
+            Image<Gray, byte> ImageBorder = _ImageWithBorder.Convert<Gray, byte>();
+            int ind_left = 100000;
+            int ind_right = -1;
+            int ind_top = -1;
+            int ind_bot = -1;
+            #region Верхний индекс
+            for (int i = 0; i < ImageInGray.Height; i++)
+            {
+                for (int j = 0; j < ImageInGray.Width; j++)
+                {
+                    if (ImageInGray.Data[i, j, 0] != 0)
+                    {
+                        ind_top = i;
+                        break;
+                    }
+                }
+                if (ind_top == i)
+                {
+                    break;
+                }
+            }
+            #endregion
+            #region Нижний индекс
+            for (int i = 0; i < ImageInGray.Height; i++)
+            {
+                for (int j = 0; j < ImageInGray.Width; j++)
+                {
+                    if (ImageInGray.Data[i, j, 0] != 0)
+                    {
+                        if (ind_bot <= i)
+                        {
+                            ind_bot = i;
+                        }
+                    }
+                }
+            }
+            #endregion
+            #region Левый индекс
+            for (int i = 0; i < ImageInGray.Height; i++)
+            {
+                for (int j = 0; j < ImageInGray.Width; j++)
+                {
+                    if (ImageInGray.Data[i, j, 0] != 0)
+                    {
+                        if (ind_left > j)
+                        {
+                            ind_left = j;
+                        }
+                    }
+                }
+            }
+            #endregion
+            #region Правый индекс
+            for (int i = 0; i < ImageInGray.Height; i++)
+            {
+                for (int j = 0; j < ImageInGray.Width; j++)
+                {
+                    if (ImageInGray.Data[i, j, 0] != 0)
+                    {
+                        if (ind_right < j)
+                        {
+                            ind_right = j;
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            System.Drawing.Point centerImageIn = new System.Drawing.Point(ind_left + (ind_right - ind_left) / 2, ind_top + (ind_bot - ind_top) / 2);
+            System.Drawing.Point centerImageBorder = new System.Drawing.Point(_ImageWithBorder.Width / 2, _ImageWithBorder.Height / 2);
+            System.Drawing.Point vector = new System.Drawing.Point(Math.Max(centerImageIn.X, centerImageBorder.X) - Math.Min(centerImageIn.X, centerImageBorder.X), Math.Max(centerImageIn.Y, centerImageBorder.Y) - Math.Min(centerImageIn.Y, centerImageBorder.Y));
+            //все точки на границе СЗЗ
+
+            List<DatePoint> pointsPlace = new List<DatePoint>();
+            //Границы
+            for (int i = 0; i < ImageBorder.Height; i++)
+            {
+                for (int j = 0; j < ImageBorder.Width; j++)
+                {
+                    if (ImageBorder.Data[i, j, 0] != 0 && (ImageBorder.Data[i + 1, j, 0] == 0 || ImageBorder.Data[i - 1, j, 0] == 0 || ImageBorder.Data[i, j + 1, 0] == 0 || ImageBorder.Data[i, j - 1, 0] == 0))
+                    {
+                        ListBorderPonts.Add(new DatePoint(j, i, 0));
+                    }
+                }
+            }
+            //Белый участок
+            for (int i = 0; i < ImageInGray.Height; i++)
+            {
+                for (int j = 0; j < ImageInGray.Width; j++)
+                {
+                    if (ImageInGray.Data[i, j, 0] != 0)
+                    {
+                        pointsPlace.Add(new DatePoint(j, i, 0));
+                    }
+                }
+            }
+            //перенос в записимости от взаиморасположения центров
+            List<DatePoint> _list_border_points = new List<DatePoint>();
+            foreach (var item in ListBorderPonts)
+            {
+                _list_border_points.Add(item);
+            }
+            ListBorderPonts.Clear();
+            foreach (var item in _list_border_points)
+            {
+                try
+                {
+                    if (centerImageBorder.X >= centerImageIn.X && centerImageBorder.Y >= centerImageIn.Y)
+                    {
+                        ImageInGray.Data[item._y - vector.Y, item._x - vector.X, 0] = 255;
+                        ListBorderPonts.Add(new DatePoint(item._x - vector.X, item._y - vector.Y, 0));
+                    }
+                    else if (centerImageBorder.X >= centerImageIn.X && centerImageBorder.Y <= centerImageIn.Y)
+                    {
+                        ImageInGray.Data[item._y + vector.Y, item._x - vector.X, 0] = 255;
+                        ListBorderPonts.Add(new DatePoint(item._x - vector.X, item._y + vector.Y, 0));
+                    }
+                    else if (centerImageBorder.X <= centerImageIn.X && centerImageBorder.Y >= centerImageIn.Y)
+                    {
+                        ImageInGray.Data[item._y - vector.Y, item._x + vector.X, 0] = 255;
+                        ListBorderPonts.Add(new DatePoint(item._x + vector.X, item._y - vector.Y, 0));
+                    }
+                    else if (centerImageBorder.X <= centerImageIn.X && centerImageBorder.Y <= centerImageIn.Y)
+                    {
+                        ImageInGray.Data[item._y + vector.Y, item._x + vector.X, 0] = 255;
+                        ListBorderPonts.Add(new DatePoint(item._x + vector.X, item._y + vector.Y, 0));
+                    }
+                }
+                catch (Exception)
+                {
+                    continue;
+                    throw;
+                }
+
+            }
+            foreach (var item in pointsPlace)
+            {
+                ImageInGray.Data[item._y, item._x, 0] = 255;
+            }
+            return ImageInGray;
+        }
+
+        private Image<Gray, byte> MovePKKtoPlace(Image<Gray, byte> ImagePlace, Image<Bgr, byte> ImagePKK)
+        {
+            List<DatePoint> points = new List<DatePoint>();
+
+            
+
+            for (int i = 0; i < ImagePKK.Height; i++)
+            {
+                for (int j = 0; j < ImagePKK.Width; j++)
+                {
+                    if (i != 0 && i != ImagePKK.Height - 1 && j != 0 && j != ImagePKK.Width - 1)
+                    {
+                        if ((ImagePKK.Data[i, j, 2] > 0 && ImagePKK.Data[i, j, 0] < 200 && ImagePKK.Data[i, j, 1] < 200))
+                        {
+                            points.Add(new DatePoint(j, i, 0));
+                        }
+                        if ((ImagePKK.Data[i, j, 2] > 150 && ImagePKK.Data[i, j, 0] > 150 && ImagePKK.Data[i, j, 1] > 150))
+                        {
+                            points.Add(new DatePoint(j, i, 0));
+                        }
+                    }
+                    if (i == 0 || j == 0 || i == ImagePKK.Height - 1 || j == ImagePKK.Width - 1)
+                    {
+                        points.Add(new DatePoint(j, i, 0));
+                    }
+
+                    //if (ImagePKK.Data[i, j, 2] > 200 && ImagePKK.Data[i, j, 0] < 30 && ImagePKK.Data[i, j, 1] < 30)
+                    //{
+                    //    points.Add(new DatePoint(j, i, 0));
+                    //}
+                }
+            }
+
+            #region поиск значений цыетов
+            //List<DatePoint> pointsColor = new List<DatePoint>();
+            //List<string> pointsstr = new List<string>();
+            //for (int i = 0; i < ImagePKK.Height; i++)
+            //{
+            //    for (int j = 0; j < ImagePKK.Width; j++)
+            //    {
+            //        if (ImagePKK.Data[i, j, 2] != 0)
+            //        {
+            //            pointsstr.Add(ImagePKK.Data[i, j, 2].ToString());
+            //        }
+            //        //for (int k = 0; k < 3; k++)
+            //        //{
+            //        //    if (ImagePKK.Data[i, j, k] != 0)
+            //        //    {
+            //        //        pointsColor.Add(new DatePoint(j, i, k, ImagePKK.Data[i, j, k]));
+            //        //    }
+            //        //}
+            //    }
+            //}
+            //var a = pointsstr.Distinct().ToList();
+            //List<int> list = new List<int>();
+            //foreach (var item in a)
+            //{
+            //    list.Add(int.Parse(item));
+            //}
+            //list.Sort();
+
+            //for (int i = 0; i < ImagePKK.Height; i++)
+            //{
+            //    for (int j = 0; j < ImagePKK.Width; j++)
+            //    {
+            //        if (ImagePKK.Data[i, j, 1] != 0)
+            //        {
+            //            pointsstr.Add(ImagePKK.Data[i, j, 1].ToString());
+            //        }
+            //        //for (int k = 0; k < 3; k++)
+            //        //{
+            //        //    if (ImagePKK.Data[i, j, k] != 0)
+            //        //    {
+            //        //        pointsColor.Add(new DatePoint(j, i, k, ImagePKK.Data[i, j, k]));
+            //        //    }
+            //        //}
+            //    }
+            //}
+            //a = pointsstr.Distinct().ToList();
+            //list = new List<int>();
+            //foreach (var item in a)
+            //{
+            //    list.Add(int.Parse(item));
+            //}
+            //list.Sort();
+            #endregion
+
+            foreach (var item in points)
+            {
+                ImagePlace.Data[item._y, item._x, 0] = 255;
+            }
+
+            return ImagePlace;
+        }
+
+        #endregion
+
+        #region Работа с СЗЗ
         private Image<Gray, byte> SummImg(Image<Gray, byte> first, Image<Bgr, byte> second)
         {
             System.Drawing.Point centerFirst = new System.Drawing.Point(first.Width / 2, first.Height / 2);
@@ -457,7 +855,9 @@ namespace Doss.ViewModel
             #endregion
             return img;
         }
+        #endregion
 
+        #region Переводы форматов
         public static void SaveClipboardImageToFile(string filePath, BitmapSource image)
         {
 
@@ -519,6 +919,8 @@ namespace Doss.ViewModel
                 return bs;
             }
         }
+        #endregion
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string propertyName)

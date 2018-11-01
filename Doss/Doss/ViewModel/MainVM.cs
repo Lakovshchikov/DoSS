@@ -20,7 +20,7 @@ using System.Data;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Windows.Input;
-
+using System.Net;
 
 namespace Doss.ViewModel
 {
@@ -385,6 +385,35 @@ namespace Doss.ViewModel
             ChangeDate_LandPlot = MapViewModel._Place.Feature.Attrs.CadRecordDate;
             LoadingDate_LandPlot = MapViewModel._Place.Feature.Attrs.Adate;
         }
+
+        public Uri UpdetePKKImageUri(MapPoint LeftTop_Point, MapPoint RightBottom_Point, Place SelectedPlace, string size_h, string size_w)
+        {
+            try
+            {
+                #region Форматирование
+                string Xmin = toStr(LeftTop_Point.X);
+                string Xmax = toStr(RightBottom_Point.X);
+                string Ymin = toStr(LeftTop_Point.Y);
+                string Ymax = toStr(RightBottom_Point.Y);
+
+                string okrug = SelectedPlace.Feature.Attrs.Okrug.ToString();
+                string rayon = SelectedPlace.Feature.Attrs.Rayon.ToString().Substring(SelectedPlace.Feature.Attrs.Rayon.ToString().IndexOf(':') + 1, SelectedPlace.Feature.Attrs.Rayon.ToString().Length - SelectedPlace.Feature.Attrs.Rayon.ToString().IndexOf(':') - 1);
+                string kvartal = SelectedPlace.Feature.Attrs.Kvartal.ToString().Substring(SelectedPlace.Feature.Attrs.Kvartal.ToString().LastIndexOf(':') + 1, SelectedPlace.Feature.Attrs.Kvartal.ToString().Length - SelectedPlace.Feature.Attrs.Kvartal.ToString().LastIndexOf(':') - 1);
+                string id = SelectedPlace.Feature.Attrs.AnnoText.ToString();
+                //string num2
+                #endregion
+                string url = string.Format("arcgis/rest/services/Cadastre/CadastreWMS/MapServer/export?dpi=96&transparent=true&format=png32&bbox={0}%2C{1}%2C{2}%2C{3}&size={4},{5}&bboxSR=102100&imageSR=102100&f=image", Xmin, Ymin, Xmax, Ymax, size_h, size_w);
+                Uri result = new Uri("https://pkk5.rosreestr.ru/" + url);
+                return result;
+            }
+            catch (Exception)
+            {
+
+                return null;
+                //throw;
+            }
+        }
+
         public void UpdateMapPointToScale()
         {
             Point secondP = new Point(0, 1);
@@ -392,7 +421,6 @@ namespace Doss.ViewModel
             Scale = GeometryEngine.Distance(_BBox_Left_Top, _mapPointToScale) / 1.735;
             //return a;
         }
-
         public void DownloadInfo()
         {
             Const_Request CR = new Const_Request();
@@ -494,7 +522,15 @@ namespace Doss.ViewModel
             //new Thread(() => _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri)).Start();
             _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri);
             _borderIsVisible = true;
-    }
+            Thread.Sleep(1000);
+            Uri uriPKK = UpdetePKKImageUri(BBox_Left_Top, BBox_Right_Bottom, MapViewModel._Place, ((int)_Window.GridMap.ActualWidth).ToString(), ((int)_Window.GridMap.ActualHeight).ToString());
+            using (WebClient client = new WebClient())
+            {
+                client.DownloadFile(uriPKK, System.AppDomain.CurrentDomain.BaseDirectory + @"PKK.png");
+            }
+            MapViewModel.ReseachBorder();
+        }
+
         #region command
         public Command SetCadMapCommand { get; set; }
         public Command SetStreetMapCommand { get; set; }
