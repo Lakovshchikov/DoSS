@@ -48,6 +48,8 @@ namespace Doss.ViewModel
         private Uri serviceUri;
         private ImageWork ImageWorks;
 
+        private Image<Gray, byte> GrayImagePKKwithBorder;
+
 
         #region prop
         public Map Map {get { return _map; }set { _map = value; OnPropertyChanged(); }}
@@ -169,11 +171,107 @@ namespace Doss.ViewModel
             overlay.Opacity = 0.5;
         }
 
-        public void ReseachBorder()
+        public void MakeImageForReseach()
         {
             OpenFileDialog _openFileDialog = new OpenFileDialog()
             { FileName = System.AppDomain.CurrentDomain.BaseDirectory + @"PKK.png" };
-            ImageWorks.WorkWithCad(_openFileDialog);
+            GrayImagePKKwithBorder = ImageWorks.WorkWithCad(_openFileDialog);
+            ReseachImage();
+        }
+
+        private void ReseachImage()
+        {
+            List<string> ls = new List<string>();
+            int i = 0;
+            DatePoint BlackPoint = ImageWorks.FindBlackPoint(GrayImagePKKwithBorder);
+            while (BlackPoint._x!=-1)
+            {
+                var location = MyMapView.ScreenToLocation(new Point(BlackPoint._x, BlackPoint._y));
+                var coord = CoordinateFormatter.ToLatitudeLongitude(location, LatitudeLongitudeFormat.DecimalDegrees, 6);
+                try
+                {
+                    var _placeCoord = GetPlaceProp.GetPlaceCoordMethod(coord.Substring(0, 9), coord.Substring(12, 9));
+                    var _place = GetPlaceProp.Get_Place(_placeCoord.Features[0].Attrs.Id);
+                    ls.Add(_place.Feature.Attrs.Cn);
+                    //LineFill(BlackPoint._x, BlackPoint._x, BlackPoint._y, 0, GrayImagePKKwithBorder.Height, 0, GrayImagePKKwithBorder.Width);
+                    Fill(BlackPoint._x, BlackPoint._y);
+                }
+                catch (Exception)
+                {
+                    Fill(BlackPoint._x, BlackPoint._y);
+                    //LineFill(BlackPoint._x, BlackPoint._x, BlackPoint._y, 0, GrayImagePKKwithBorder.Height, 0, GrayImagePKKwithBorder.Width);
+                }              
+                i++;
+                BlackPoint = ImageWorks.FindBlackPoint(GrayImagePKKwithBorder);
+            }          
+        }
+        private void Fill(int x, int y)
+        {
+            if (x >= 0 && x < GrayImagePKKwithBorder.Width && y >= 0 && y < GrayImagePKKwithBorder.Height && GrayImagePKKwithBorder.Data[y, x, 0] == 0 && GrayImagePKKwithBorder.Data[y, x, 0] != 255)
+            {
+                GrayImagePKKwithBorder.Data[y, x, 0] = 255;
+                Fill(x + 1, y);
+                Fill(x - 1, y);
+                Fill(x, y - 1);
+                Fill(x, y + 1);
+            }
+
+        }
+
+        void LineFill(int x1, int x2, int y, int nMinY, int nMaxY, int nMinX, int nMaxX)
+        {
+            int xL, xR;
+            if (y < nMinY || nMaxY < y)
+                return;
+            for (xL = x1; xL >= nMinX; --xL)
+            { // scan left
+                if (GrayImagePKKwithBorder.Data[y, xL, 0] != 0)
+                    break;
+                GrayImagePKKwithBorder.Data[y, xL, 0] = 255;
+            }
+            if (xL < x1)
+            {
+                LineFill(xL, x1, y - 1, nMinY, nMaxY, nMinX, nMaxX); // fill child
+                LineFill(xL, x1, y + 1, nMinY, nMaxY, nMinX, nMaxX); // fill child
+                ++x1;
+            }
+            for (xR = x2; xR <= nMaxX; ++xR)
+            { // scan right
+                if (GrayImagePKKwithBorder.Data[y, xR, 0] != 0)
+                    break;
+                GrayImagePKKwithBorder.Data[y, xR, 0] = 255;
+            }
+            if (xR > x2)
+            {
+                LineFill(x2, xR, y - 1, nMinY, nMaxY, nMinX, nMaxX); // fill child
+                LineFill(x2, xR, y + 1, nMinY, nMaxY, nMinX, nMaxX); // fill child
+                --x2;
+            }
+            for (xR = x1; xR <= x2 && xR <= nMaxX; ++xR)
+            {  // scan between
+                if (GrayImagePKKwithBorder.Data[y, xR, 0] == 0)
+                    GrayImagePKKwithBorder.Data[y, xR, 0] = 255;
+                else
+                {
+                    if (x1 < xR)
+                    {
+                        // fill child
+                        LineFill(x1, xR - 1, y - 1, nMinY, nMaxY, nMinX, nMaxX);
+                        // fill child
+                        LineFill(x1, xR - 1, y + 1, nMinY, nMaxY, nMinX, nMaxX);
+                        x1 = xR;
+                    }
+                    // Note: This function still works if this step is removed.
+                    for (; xR <= x2 && xR <= nMaxX; ++xR)
+                    { // skip over border
+                        if (GrayImagePKKwithBorder.Data[y, xR, 0] == 0)
+                        {
+                            x1 = xR--;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         private System.Drawing.Bitmap CreateBitMap_FromUri(Uri u)

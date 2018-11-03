@@ -165,7 +165,7 @@ namespace Doss.ViewModel
 
         }
 
-        public void WorkWithCad(OpenFileDialog _ofd)
+        public Image<Gray,byte> WorkWithCad(OpenFileDialog _ofd)
         {
             _ImagePKK = new Image<Bgr, Byte>(_ofd.FileName);
 
@@ -181,11 +181,11 @@ namespace Doss.ViewModel
             ResultImage = MovePKKtoPlace(ResultImage, _ImagePKK);
             ResultImage = WhiteAroundBorder(ResultImage);
 
-            _ImageForFill = ResultImage.Copy();
-            DatePoint BlackPoint = FoundBlackPoint(_ImageForFill);
-            Fill(BlackPoint._x, BlackPoint._y);
+            //_ImageForFill = ResultImage.Copy();
+            //DatePoint BlackPoint = FindBlackPoint(_ImageForFill);
+            //Fill(BlackPoint._x, BlackPoint._y);
+            return ResultImage;
 
-            
             //ImageOutBitMapToPKK = ToBitmapSource(_ImageForFill);
             //SaveClipboardImageToFile("img13.png", ImageOutBitMapToPKK);
             //RaisePropertyChanged("ImageOutBitMapToPKK");
@@ -194,44 +194,42 @@ namespace Doss.ViewModel
 
         #region Работа с ПКК
 
-        private void Fill(int x, int y)
-        {
-            if (x >= 0 && x < _ImageForFill.Width && y >= 0 && y < _ImageForFill.Height && _ImageForFill.Data[y, x, 0] == 0 && _ImageForFill.Data[y, x, 0] != 255)
-            {
-                _ImageForFill.Data[y, x, 0] = 255;
-                Fill(x + 1, y);
-                Fill(x - 1, y);
-                Fill(x, y - 1);
-                Fill(x, y + 1);
-            }
+        
 
-        }
-
-        private DatePoint FoundBlackPoint(Image<Gray, byte> image)
+        public DatePoint FindBlackPoint(Image<Gray, byte> image)
         {
             DatePoint result = new DatePoint();
-            result._x = -1;
-
-            for (int i = 0; i < image.Height; i++)
+            try
             {
-                for (int j = 0; j < image.Width; j++)
+                result._x = -1;
+
+                for (int i = 0; i < image.Height; i++)
                 {
-                    if (image.Data[i, j, 0] != 255)
+                    for (int j = 0; j < image.Width; j++)
                     {
-                        result._x = j;
-                        result._y = i;
-                        result._z = j;
-                        result._value = 0;
+                        if (image.Data[i, j, 0] != 255)
+                        {
+                            result._x = j;
+                            result._y = i;
+                            result._z = j;
+                            result._value = 0;
+                            break;
+                        }
+                    }
+                    if (result._x != -1)
+                    {
                         break;
                     }
                 }
-                if (result._x != -1)
-                {
-                    break;
-                }
-            }
 
-            return result;
+                return result;
+            }
+            catch (Exception)
+            {
+                result._x = -1;
+                return result;
+            }
+           
         }
         private Image<Gray, byte> WhiteAroundBorder(Image<Gray, byte> image)
         {

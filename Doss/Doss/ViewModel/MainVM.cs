@@ -528,7 +528,7 @@ namespace Doss.ViewModel
             {
                 client.DownloadFile(uriPKK, System.AppDomain.CurrentDomain.BaseDirectory + @"PKK.png");
             }
-            MapViewModel.ReseachBorder();
+            MapViewModel.MakeImageForReseach();
         }
 
         #region command
