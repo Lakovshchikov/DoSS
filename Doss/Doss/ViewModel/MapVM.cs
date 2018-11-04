@@ -49,6 +49,7 @@ namespace Doss.ViewModel
         private ImageWork ImageWorks;
 
         private Image<Gray, byte> GrayImagePKKwithBorder;
+        private GraphicsOverlay _OverLayforBorder;
 
 
         #region prop
@@ -56,6 +57,7 @@ namespace Doss.ViewModel
         public MapView MyMapView { get { return _MyMapView; } set { _MyMapView = value; OnPropertyChanged(); } }
         public MapPoint SelectedLocation { get { return _SelectedLocation; } set { _SelectedLocation = value;OnPropertyChanged(); } }
         public GraphicsOverlay OverLay { get { return _OverLay; } set { _OverLay = value;OnPropertyChanged(); } }
+        public GraphicsOverlay OverLayforBorder { get { return _OverLayforBorder; } set { _OverLayforBorder = value; OnPropertyChanged(); } }
         public PlaceCoord SelectedPlaceCoord { get { return _SelectedPlaceCoord; } set { _SelectedPlaceCoord = value; OnPropertyChanged(); } }
         public GetPlace GetPlaceProp { get { return _GetPlace; } set { _GetPlace = value; } } 
         public string Coord { get { return _Coord; } set { _Coord = value; } }
@@ -82,10 +84,13 @@ namespace Doss.ViewModel
             MainViewModel.CadMap = true;
             MyMapView.Map.InitialViewpoint = new Viewpoint(54.5293000, 36.2754200, 60000);
             OverLay = new GraphicsOverlay();
+            OverLayforBorder = new GraphicsOverlay();
             SelectedPlaceCoord = new PlaceCoord();
             GetPlaceProp = new GetPlace();
             MyMapView.GraphicsOverlays.Add(OverLay);
-            
+            MyMapView.GraphicsOverlays.Add(OverLayforBorder);
+
+
         }
 
 
@@ -171,109 +176,78 @@ namespace Doss.ViewModel
             overlay.Opacity = 0.5;
         }
 
-        public void MakeImageForReseach()
+        public List<Place> MakeImageForReseach()
         {
             OpenFileDialog _openFileDialog = new OpenFileDialog()
             { FileName = System.AppDomain.CurrentDomain.BaseDirectory + @"PKK.png" };
             GrayImagePKKwithBorder = ImageWorks.WorkWithCad(_openFileDialog);
-            ReseachImage();
+            
+            return ReseachImage();
         }
 
-        private void ReseachImage()
+        private List<Place> ReseachImage()
         {
-            List<string> ls = new List<string>();
+            List<Place> ls = new List<Place>();
             int i = 0;
             DatePoint BlackPoint = ImageWorks.FindBlackPoint(GrayImagePKKwithBorder);
             while (BlackPoint._x!=-1)
             {
                 var location = MyMapView.ScreenToLocation(new Point(BlackPoint._x, BlackPoint._y));
                 var coord = CoordinateFormatter.ToLatitudeLongitude(location, LatitudeLongitudeFormat.DecimalDegrees, 6);
-                try
-                {
                     var _placeCoord = GetPlaceProp.GetPlaceCoordMethod(coord.Substring(0, 9), coord.Substring(12, 9));
-                    var _place = GetPlaceProp.Get_Place(_placeCoord.Features[0].Attrs.Id);
-                    ls.Add(_place.Feature.Attrs.Cn);
-                    //LineFill(BlackPoint._x, BlackPoint._x, BlackPoint._y, 0, GrayImagePKKwithBorder.Height, 0, GrayImagePKKwithBorder.Width);
-                    Fill(BlackPoint._x, BlackPoint._y);
-                }
-                catch (Exception)
-                {
-                    Fill(BlackPoint._x, BlackPoint._y);
-                    //LineFill(BlackPoint._x, BlackPoint._x, BlackPoint._y, 0, GrayImagePKKwithBorder.Height, 0, GrayImagePKKwithBorder.Width);
-                }              
+                    if (_placeCoord.Features.Length==4)
+                    {
+                        var _place = GetPlaceProp.Get_Place(_placeCoord.Features[0].Attrs.Id);
+                        ls.Add(_place);
+                    }
+                    LineFill(BlackPoint._x, BlackPoint._y);           
                 i++;
                 BlackPoint = ImageWorks.FindBlackPoint(GrayImagePKKwithBorder);
-            }          
+            }
+            var a = 0;
+            ls.GroupBy(s => s.Feature.Attrs.Cn).Select(g => g.First());
+            
+            return ls;      
         }
-        private void Fill(int x, int y)
+        
+        void LineFill(int x, int y)
         {
-            if (x >= 0 && x < GrayImagePKKwithBorder.Width && y >= 0 && y < GrayImagePKKwithBorder.Height && GrayImagePKKwithBorder.Data[y, x, 0] == 0 && GrayImagePKKwithBorder.Data[y, x, 0] != 255)
+            
+            if (x < GrayImagePKKwithBorder.Width && x > 0 && y < GrayImagePKKwithBorder.Height && y > 0 && GrayImagePKKwithBorder.Data[y, x, 0] != 255)
             {
-                GrayImagePKKwithBorder.Data[y, x, 0] = 255;
-                Fill(x + 1, y);
-                Fill(x - 1, y);
-                Fill(x, y - 1);
-                Fill(x, y + 1);
-            }
 
-        }
-
-        void LineFill(int x1, int x2, int y, int nMinY, int nMaxY, int nMinX, int nMaxX)
-        {
-            int xL, xR;
-            if (y < nMinY || nMaxY < y)
-                return;
-            for (xL = x1; xL >= nMinX; --xL)
-            { // scan left
-                if (GrayImagePKKwithBorder.Data[y, xL, 0] != 0)
-                    break;
-                GrayImagePKKwithBorder.Data[y, xL, 0] = 255;
-            }
-            if (xL < x1)
-            {
-                LineFill(xL, x1, y - 1, nMinY, nMaxY, nMinX, nMaxX); // fill child
-                LineFill(xL, x1, y + 1, nMinY, nMaxY, nMinX, nMaxX); // fill child
-                ++x1;
-            }
-            for (xR = x2; xR <= nMaxX; ++xR)
-            { // scan right
-                if (GrayImagePKKwithBorder.Data[y, xR, 0] != 0)
-                    break;
-                GrayImagePKKwithBorder.Data[y, xR, 0] = 255;
-            }
-            if (xR > x2)
-            {
-                LineFill(x2, xR, y - 1, nMinY, nMaxY, nMinX, nMaxX); // fill child
-                LineFill(x2, xR, y + 1, nMinY, nMaxY, nMinX, nMaxX); // fill child
-                --x2;
-            }
-            for (xR = x1; xR <= x2 && xR <= nMaxX; ++xR)
-            {  // scan between
-                if (GrayImagePKKwithBorder.Data[y, xR, 0] == 0)
-                    GrayImagePKKwithBorder.Data[y, xR, 0] = 255;
-                else
+                List<DatePoint> points = new List<DatePoint>();
+                for (int i = x; i > 0; i--)
                 {
-                    if (x1 < xR)
+                    if (GrayImagePKKwithBorder.Data[y, i, 0] != 255)
                     {
-                        // fill child
-                        LineFill(x1, xR - 1, y - 1, nMinY, nMaxY, nMinX, nMaxX);
-                        // fill child
-                        LineFill(x1, xR - 1, y + 1, nMinY, nMaxY, nMinX, nMaxX);
-                        x1 = xR;
+                        GrayImagePKKwithBorder.Data[y, i, 0] = 255;
+                        points.Add(new DatePoint(i, y, 0));
                     }
-                    // Note: This function still works if this step is removed.
-                    for (; xR <= x2 && xR <= nMaxX; ++xR)
-                    { // skip over border
-                        if (GrayImagePKKwithBorder.Data[y, xR, 0] == 0)
-                        {
-                            x1 = xR--;
-                            break;
-                        }
+                    else
+                    {
+                        break;
                     }
+                }
+                for (int i = x + 1; i < GrayImagePKKwithBorder.Width; i++)
+                {
+                    if (GrayImagePKKwithBorder.Data[y, i, 0] != 255)
+                    {
+                        GrayImagePKKwithBorder.Data[y, i, 0] = 255;
+                        points.Add(new DatePoint(i, y, 0));
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                foreach (var item in points)
+                {
+                    LineFill(item._x, item._y + 1);
+                    LineFill(item._x, item._y - 1);
                 }
             }
         }
-
         private System.Drawing.Bitmap CreateBitMap_FromUri(Uri u)
         {
             System.Net.WebRequest request =

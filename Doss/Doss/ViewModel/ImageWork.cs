@@ -457,9 +457,6 @@ namespace Doss.ViewModel
         private Image<Gray, byte> MovePKKtoPlace(Image<Gray, byte> ImagePlace, Image<Bgr, byte> ImagePKK)
         {
             List<DatePoint> points = new List<DatePoint>();
-
-            
-
             for (int i = 0; i < ImagePKK.Height; i++)
             {
                 for (int j = 0; j < ImagePKK.Width; j++)
@@ -478,12 +475,7 @@ namespace Doss.ViewModel
                     if (i == 0 || j == 0 || i == ImagePKK.Height - 1 || j == ImagePKK.Width - 1)
                     {
                         points.Add(new DatePoint(j, i, 0));
-                    }
-
-                    //if (ImagePKK.Data[i, j, 2] > 200 && ImagePKK.Data[i, j, 0] < 30 && ImagePKK.Data[i, j, 1] < 30)
-                    //{
-                    //    points.Add(new DatePoint(j, i, 0));
-                    //}
+                    }             
                 }
             }
 

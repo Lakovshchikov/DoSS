@@ -49,6 +49,8 @@ namespace Doss.ViewModel
         private Place_Categories _categories;
         private Form_Place _forms;
 
+        private List<Place> FoundPlaces;
+
         // Bitmap для границ
         private System.Drawing.Bitmap _SelectedPlace_Bitmap;
 
@@ -198,6 +200,28 @@ namespace Doss.ViewModel
         public static readonly DependencyProperty _StatusBarTextProperty =
             DependencyProperty.Register("_StatusBarText", typeof(string), typeof(MainVM), new PropertyMetadata("Подключение к сервисам росреестра. Пожалуйста подождите"));
 
+        public bool BorderIsVisible
+        {
+            get { return (bool)GetValue(BorderIsVisibleProperty); }
+            set { SetValue(BorderIsVisibleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for BorderIsVisible.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BorderIsVisibleProperty =
+            DependencyProperty.Register("BorderIsVisible", typeof(bool), typeof(MainVM), new PropertyMetadata(false));
+
+        public string AllPlaces
+        {
+            get { return (string)GetValue(AllPlacesProperty); }
+            set { SetValue(AllPlacesProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AllPlaces.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AllPlacesProperty =
+            DependencyProperty.Register("AllPlaces", typeof(string), typeof(MainVM), new PropertyMetadata(""));
+
+
+
 
 
 
@@ -224,7 +248,8 @@ namespace Doss.ViewModel
             SetOpenStreetMapCommand = new Command(SetOpenStreetMap, () => true);
             SetSpaceMapCommand = new Command(SetSpaceMap, () => true);
             SetBorderCommand = new Command(SetBorder, () => true);
-
+            HideBorderCommand = new Command(HideDorder, () => true);
+            ReseachBorderCommand = new Command(ReseachBorderThread, () => true);
             new Thread(() => DownloadInfo()).Start();
             #region dpi
             //var dpiXProperty = typeof(SystemParameters).GetProperty("DpiX", BindingFlags.NonPublic | BindingFlags.Static);
@@ -245,7 +270,7 @@ namespace Doss.ViewModel
             if (_MapVM.SelectedLocation != null)
             {
                 _MapVM.CreatePictureMarker(_MapVM.OverLay,Img_Uri).Wait();
-                if (_borderIsVisible)
+                if (BorderIsVisible)
                 {
                     //new Thread(() => _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri)).Start();
                     _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri);
@@ -521,14 +546,40 @@ namespace Doss.ViewModel
         {
             //new Thread(() => _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri)).Start();
             _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri);
-            _borderIsVisible = true;
-            Thread.Sleep(1000);
+            BorderIsVisible = true;;
+            
+           
+        }
+        private void HideDorder()
+        {
+            try
+            {
+                _MapVM.OverLay.Graphics.Remove(_MapVM.OverLay.Graphics[1]);
+                BorderIsVisible = false;
+            }
+            catch (Exception)
+            {
+            }
+            
+        }
+
+        private void ReseachBorderThread()
+        {
             Uri uriPKK = UpdetePKKImageUri(BBox_Left_Top, BBox_Right_Bottom, MapViewModel._Place, ((int)_Window.GridMap.ActualWidth).ToString(), ((int)_Window.GridMap.ActualHeight).ToString());
             using (WebClient client = new WebClient())
             {
                 client.DownloadFile(uriPKK, System.AppDomain.CurrentDomain.BaseDirectory + @"PKK.png");
             }
-            MapViewModel.MakeImageForReseach();
+            FoundPlaces = MapViewModel.MakeImageForReseach();
+            foreach (var item in FoundPlaces)
+            {
+                AllPlaces += item.Feature.Attrs.Cn + " ";
+            }
+        }
+
+        private void ReseachBorder()
+        {
+            new Thread(() => ReseachBorderThread()).Start();
         }
 
         #region command
@@ -537,6 +588,8 @@ namespace Doss.ViewModel
         public Command SetOpenStreetMapCommand { get; set; }
         public Command SetSpaceMapCommand { get; set; }
         public Command SetBorderCommand { get; set; }
+        public Command HideBorderCommand { get; set; }
+        public Command ReseachBorderCommand { get; set; }
         #endregion
 
         #region INotifyPropertyChanged
