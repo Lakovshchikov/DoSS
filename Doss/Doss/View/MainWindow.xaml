@@ -18,7 +18,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <TextBox Name="a" Grid.Column="1" Margin="5,0,500,0">
+        <!--Координаты--><TextBox Name="a" Grid.Column="1" Margin="5,0,500,0">
         </TextBox>
         <Menu  Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Background="White">
             <MenuItem Header="Файл">
@@ -35,11 +35,6 @@
                         <Image Source="/Resources/Images/download.png"></Image>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Сформировать отчет">
-                    <MenuItem.Icon>
-                        <Image Source="/Resources/Images/report.png"></Image>
-                    </MenuItem.Icon>
-                </MenuItem>
             </MenuItem>
             <MenuItem Header="Добавить слой">
                 <MenuItem.Icon>
@@ -48,10 +43,9 @@
                 <MenuItem Header="Кадастровая карта" IsCheckable="True" IsChecked="{Binding CadMap}" Command="{Binding SetCadMapCommand}"/>
                 <MenuItem Header="Карта со спутника" IsCheckable="True" IsChecked="{Binding SpaceMap}" Command="{Binding SetSpaceMapCommand}"/>
                 <MenuItem Header="Карта улиц" IsCheckable="True" IsChecked="{Binding StreetMap}" Command="{Binding SetStreetMapCommand}"/>
-                <MenuItem Header="Подробная карта улиц" IsCheckable="True" IsChecked="{Binding OpStMap}" Command="{Binding SetOpenStreetMapCommand}" />
+                <!--<MenuItem Header="Подробная карта улиц" IsCheckable="True" IsChecked="{Binding OpStMap}" Command="{Binding SetOpenStreetMapCommand}" />-->
             </MenuItem>
         </Menu>
-
         <Grid Grid.Column="0" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
@@ -171,11 +165,16 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
+                            <ScrollViewer Margin="5"  Grid.Column="1" Grid.RowSpan="2" Grid.Row="1">
+                                <WrapPanel>
+                                    <Label FontSize="12"  Height="auto" Width="auto" FontWeight="Regular">
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding AllPlaces}"/>
+                                    </Label>
+                                </WrapPanel>
+                            </ScrollViewer>
                             <Label Grid.ColumnSpan="2" VerticalAlignment="Bottom" Width="auto" Content="Участки в СЗЗ:" Grid.Row="0" HorizontalAlignment="Center" FontSize="14"/>
-                            <Label  FontSize="12" FontWeight="Regular" Grid.Row="1" Height="auto" Width="auto" Margin="5" MinWidth="160" MinHeight="70" Grid.Column="1" Grid.RowSpan="3">
-                                <TextBlock TextWrapping="Wrap" Text="{Binding AllPlaces}"/>
-                            </Label>
-                            <Button Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" Command="{Binding ReseachBorderCommand}" Content="Анализ" HorizontalAlignment="Center"  Height="25" Width="120" Background="White"/>
+                            <Button Grid.Row="1" Grid.Column="0" Command="{Binding ReseachBorderCommand}" Content="Анализ" HorizontalAlignment="Center"  Height="25" Width="130" Background="White"/>
+                            <Button Grid.Row="2" Grid.Column="0" Command="{Binding CreateWordDocCommad}" Content="Сформировать отчет" HorizontalAlignment="Center"  Height="25" Width="130" Background="White"/>
                         </Grid>
                     </TabItem.Content>
                 </TabItem>

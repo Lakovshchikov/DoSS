@@ -89,8 +89,6 @@ namespace Doss.ViewModel
             GetPlaceProp = new GetPlace();
             MyMapView.GraphicsOverlays.Add(OverLay);
             MyMapView.GraphicsOverlays.Add(OverLayforBorder);
-
-
         }
 
 
@@ -103,6 +101,7 @@ namespace Doss.ViewModel
 
         private void SetLocationThread()
         {
+            
             ToWGS84();
             SelectedPlaceCoord = GetPlaceProp.GetPlaceCoordMethod(Coord.Substring(0, 9), Coord.Substring(12, 9));
             _Place = GetPlaceProp.Get_Place(SelectedPlaceCoord.Features[0].Attrs.Id);
@@ -185,31 +184,28 @@ namespace Doss.ViewModel
             return ReseachImage();
         }
 
-        private List<Place> ReseachImage()
+        private  List<Place> ReseachImage()
         {
             List<Place> ls = new List<Place>();
-            int i = 0;
             DatePoint BlackPoint = ImageWorks.FindBlackPoint(GrayImagePKKwithBorder);
-            while (BlackPoint._x!=-1)
+            while (BlackPoint._x != -1)
             {
                 var location = MyMapView.ScreenToLocation(new Point(BlackPoint._x, BlackPoint._y));
                 var coord = CoordinateFormatter.ToLatitudeLongitude(location, LatitudeLongitudeFormat.DecimalDegrees, 6);
-                    var _placeCoord = GetPlaceProp.GetPlaceCoordMethod(coord.Substring(0, 9), coord.Substring(12, 9));
-                    if (_placeCoord.Features.Length==4)
-                    {
-                        var _place = GetPlaceProp.Get_Place(_placeCoord.Features[0].Attrs.Id);
-                        ls.Add(_place);
-                    }
-                    LineFill(BlackPoint._x, BlackPoint._y);           
-                i++;
+                var _placeCoord = GetPlaceProp.GetPlaceCoordMethod(coord.Substring(0, 9), coord.Substring(12, 9));
+                int cnt = _placeCoord.Features[0].Attrs.Cn.Count(c => c == ':');
+                if (_placeCoord.Features[0].Attrs.Address != null)
+                {
+                    var place1 = GetPlaceProp.Get_Place(_placeCoord.Features[0].Attrs.Id);
+                    ls.Add(place1);
+                }
+                LineFill(BlackPoint._x, BlackPoint._y);
                 BlackPoint = ImageWorks.FindBlackPoint(GrayImagePKKwithBorder);
             }
-            var a = 0;
-            ls.GroupBy(s => s.Feature.Attrs.Cn).Select(g => g.First());
-            
-            return ls;      
+            ls = ls.GroupBy(s => s.Feature.Attrs.Cn).Select(g => g.First()).ToList();
+            return ls;
         }
-        
+
         void LineFill(int x, int y)
         {
             

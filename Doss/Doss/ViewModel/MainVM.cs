@@ -228,6 +228,7 @@ namespace Doss.ViewModel
 
 
 
+
         #endregion
 
 
@@ -250,6 +251,7 @@ namespace Doss.ViewModel
             SetBorderCommand = new Command(SetBorder, () => true);
             HideBorderCommand = new Command(HideDorder, () => true);
             ReseachBorderCommand = new Command(ReseachBorderThread, () => true);
+            CreateWordDocCommad = new Command(CreateWordDoc, () => true);
             new Thread(() => DownloadInfo()).Start();
             #region dpi
             //var dpiXProperty = typeof(SystemParameters).GetProperty("DpiX", BindingFlags.NonPublic | BindingFlags.Static);
@@ -264,6 +266,7 @@ namespace Doss.ViewModel
 
         private void NavigationCompleted(object sender, EventArgs e)
         {
+            GC.Collect();
             SetBBox();
             _Img_Uri= UpdateImgUri(BBox_Left_Top, BBox_Right_Bottom, MapViewModel._Place, ((int)_Window.GridMap.ActualWidth).ToString(), ((int)_Window.GridMap.ActualHeight).ToString());
             UpdateMapPointToScale();
@@ -547,8 +550,9 @@ namespace Doss.ViewModel
             //new Thread(() => _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri)).Start();
             _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri);
             BorderIsVisible = true;;
-            
            
+
+
         }
         private void HideDorder()
         {
@@ -565,6 +569,7 @@ namespace Doss.ViewModel
 
         private void ReseachBorderThread()
         {
+            _StatusBarText = "Идет анализ, пожалуйста подождите";
             Uri uriPKK = UpdetePKKImageUri(BBox_Left_Top, BBox_Right_Bottom, MapViewModel._Place, ((int)_Window.GridMap.ActualWidth).ToString(), ((int)_Window.GridMap.ActualHeight).ToString());
             using (WebClient client = new WebClient())
             {
@@ -575,11 +580,33 @@ namespace Doss.ViewModel
             {
                 AllPlaces += item.Feature.Attrs.Cn + " ";
             }
+            _StatusBarText = "Анализ завершен. Рабочая область готова для использования";
         }
 
         private void ReseachBorder()
         {
             new Thread(() => ReseachBorderThread()).Start();
+        }
+
+        private void CreateWordDoc()
+        {
+            double screenLeft = _Window.GridMap.PointToScreen(new Point(0, 0)).X;
+            double screenTop = _Window.GridMap.PointToScreen(new Point(0, 0)).Y;
+            double screenWidth = _Window.GridMap.PointToScreen(new Point(_Window.GridMap.ActualWidth, _Window.GridMap.ActualHeight)).X - screenLeft;
+
+            double screenHeight = _Window.GridMap.PointToScreen(new Point(_Window.GridMap.ActualWidth, _Window.GridMap.ActualHeight)).Y - screenTop;
+
+            using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap((int)screenWidth,
+                (int)screenHeight))
+            {
+                using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(bmp))
+                {
+                    g.CopyFromScreen((int)screenLeft, (int)screenTop, 0, 0, bmp.Size);
+                    bmp.Save("pictureforDoc.png");
+                }
+
+            }
+            WorkWithDoc Doc = new WorkWithDoc(FoundPlaces,_categories);
         }
 
         #region command
@@ -590,6 +617,7 @@ namespace Doss.ViewModel
         public Command SetBorderCommand { get; set; }
         public Command HideBorderCommand { get; set; }
         public Command ReseachBorderCommand { get; set; }
+        public Command CreateWordDocCommad { get; set; }
         #endregion
 
         #region INotifyPropertyChanged
