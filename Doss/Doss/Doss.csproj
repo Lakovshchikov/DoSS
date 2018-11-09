@@ -54,6 +54,10 @@
       <HintPath>..\packages\Microsoft.Office.Interop.Word.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Word.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Win32, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Win32.1.0.0\lib\net40\Microsoft.Win32.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -68,6 +72,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Windows" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -94,10 +99,12 @@
     <Compile Include="Model\DatePoint.cs" />
     <Compile Include="Model\Form_Place.cs" />
     <Compile Include="Model\GetPlaceCoord.cs" />
+    <Compile Include="Model\MyViewPoint.cs" />
     <Compile Include="Model\Place.cs" />
     <Compile Include="Model\PlaceCoord.cs" />
     <Compile Include="Model\Place_Categories.cs" />
     <Compile Include="Model\TypesOfUse.cs" />
+    <Compile Include="Model\ViewPointWork.cs" />
     <Compile Include="Model\WorkWithDoc.cs" />
     <Compile Include="Resource1.Designer.cs">
       <AutoGen>True</AutoGen>

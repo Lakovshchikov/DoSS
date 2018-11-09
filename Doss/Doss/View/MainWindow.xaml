@@ -18,25 +18,25 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <!--Координаты--><TextBox Name="a" Grid.Column="1" Margin="5,0,500,0">
-        </TextBox>
+        <!--Координаты--><!--<TextBox Name="a" Grid.Column="1" Margin="5,0,500,0">
+        </TextBox>-->
         <Menu  Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Background="White">
-            <MenuItem Header="Файл">
+            <MenuItem Header="Файл" FontSize="18">
                 <MenuItem.Icon>
                     <Image Source="/Resources/Images/file.png"></Image>
                 </MenuItem.Icon>
-                <MenuItem Header="Сохранить">
+                <MenuItem Header="Сохранить состояние рабочей области" Command="{Binding SaveWorkbenchCommand}">
                     <MenuItem.Icon>
                         <Image Source="/Resources/Images/save.png"></Image>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Загрузить">
+                <MenuItem Header="Загрузить состояние рабочей области" Command="{Binding LoadWorkbenchCommand}">
                     <MenuItem.Icon>
                         <Image Source="/Resources/Images/download.png"></Image>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Добавить слой">
+            <MenuItem Header="Выбрать слой карты" FontSize="18">
                 <MenuItem.Icon>
                     <Image Source="/Resources/Images/AddMap.png"></Image>
                 </MenuItem.Icon>
@@ -142,7 +142,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Label Grid.ColumnSpan="2" VerticalAlignment="Bottom" Width="auto" Content="Границы санитарно-защитной зоны:" Grid.Row="0" HorizontalAlignment="Center" FontSize="14"/>
-                            <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding _BorderValue}" Margin="75,10,75,0" Height="30" VerticalAlignment="Top"/>
+                            <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding _BorderValue}" MaxLength="4" TextAlignment="Center" FontSize="18" Margin="75,10,75,0" Height="30" VerticalAlignment="Top"/>
                             <Button Grid.Row="2" Grid.Column="0" Command="{Binding SetBorderCommand}" Content="Показать границы" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" Height="25" Width="120" Background="White"/>
                             <Button Grid.Row="2" Grid.Column="1" Command="{Binding HideBorderCommand}" Content="Скрыть границы" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" Height="25" Width="120" Background="White"/>
                         </Grid>
@@ -181,7 +181,7 @@
             </TabControl>
         </Grid>
         <Grid Grid.Column="1" x:Name="GridMap" Grid.Row="1" Margin="5,0,5,5" >
-            <esri:MapView x:Name="MyMapView" Map="{Binding Map}" Visibility="Visible" Grid.Column="1" Grid.Row="1">
+            <esri:MapView x:Name="MyMapView" Map="{Binding Map}" IsEnabled="{Binding Status}" Visibility="Visible" Grid.Column="1" Grid.Row="1">
             </esri:MapView>
         </Grid>
         <Grid Grid.Column="1" Grid.Row="2">
@@ -199,7 +199,7 @@
     <Window.Resources>
         
         <Style TargetType="MenuItem">
-            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontSize" Value="14"/>
             <Setter Property="Background" Value="White"/>
         </Style>
         <Style TargetType="Label">

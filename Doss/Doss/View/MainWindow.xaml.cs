@@ -65,7 +65,7 @@ namespace Doss
         {
             var windowPosition = Mouse.GetPosition(this);
             var screenPosition = this.PointToScreen(windowPosition);
-            a.Text = string.Format("{0} --- {1}", windowPosition, screenPosition);
+            //a.Text = string.Format("{0} --- {1}", windowPosition, screenPosition);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

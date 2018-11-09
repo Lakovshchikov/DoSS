@@ -180,15 +180,7 @@ namespace Doss.ViewModel
             }
             ResultImage = MovePKKtoPlace(ResultImage, _ImagePKK);
             ResultImage = WhiteAroundBorder(ResultImage);
-
-            //_ImageForFill = ResultImage.Copy();
-            //DatePoint BlackPoint = FindBlackPoint(_ImageForFill);
-            //Fill(BlackPoint._x, BlackPoint._y);
             return ResultImage;
-
-            //ImageOutBitMapToPKK = ToBitmapSource(_ImageForFill);
-            //SaveClipboardImageToFile("img13.png", ImageOutBitMapToPKK);
-            //RaisePropertyChanged("ImageOutBitMapToPKK");
 
         }
 

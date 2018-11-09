@@ -48,6 +48,7 @@ namespace Doss.ViewModel
         private TypesOf_Use _types;
         private Place_Categories _categories;
         private Form_Place _forms;
+        private Thread secondThread;
 
         private List<Place> FoundPlaces;
 
@@ -249,10 +250,13 @@ namespace Doss.ViewModel
             SetOpenStreetMapCommand = new Command(SetOpenStreetMap, () => true);
             SetSpaceMapCommand = new Command(SetSpaceMap, () => true);
             SetBorderCommand = new Command(SetBorder, () => true);
-            HideBorderCommand = new Command(HideDorder, () => true);
+            HideBorderCommand = new Command(HideBorder, () => true);
             ReseachBorderCommand = new Command(ReseachBorderThread, () => true);
             CreateWordDocCommad = new Command(CreateWordDoc, () => true);
-            new Thread(() => DownloadInfo()).Start();
+            SaveWorkbenchCommand = new Command(SaveWorkbench, () => true);
+            LoadWorkbenchCommand = new Command(LoadWorkbench, () => true);
+            secondThread = new Thread(() => DownloadInfo()); secondThread.Start();
+
             #region dpi
             //var dpiXProperty = typeof(SystemParameters).GetProperty("DpiX", BindingFlags.NonPublic | BindingFlags.Static);
             //var dpiYProperty = typeof(SystemParameters).GetProperty("Dpi", BindingFlags.NonPublic | BindingFlags.Static);
@@ -266,7 +270,7 @@ namespace Doss.ViewModel
 
         private void NavigationCompleted(object sender, EventArgs e)
         {
-            GC.Collect();
+            
             SetBBox();
             _Img_Uri= UpdateImgUri(BBox_Left_Top, BBox_Right_Bottom, MapViewModel._Place, ((int)_Window.GridMap.ActualWidth).ToString(), ((int)_Window.GridMap.ActualHeight).ToString());
             UpdateMapPointToScale();
@@ -369,49 +373,74 @@ namespace Doss.ViewModel
             }
             return st;
         }
+        private string toStrInv(string a)
+        {
+            string st = "";
+            foreach (var item in a)
+            {
+                if (item != '.')
+                {
+                    st += item;
+                }
+                else
+                {
+                    st += ",";
+                }
+            }
+            return st;
+        }
         public void UpdateInfo()
         {
-            Type_LandPlot = "Земельный участок";
-
-            Cad_Num_LandPlot = MapViewModel._Place.Feature.Attrs.Cn;
-            Cad_quarter_LandPlot = MapViewModel._Place.Feature.Attrs.KvartalCn;
-
-            //Статус
-            if (MapViewModel._Place.Feature.Attrs.Statecd == "01") Status_LandPlot = "Ранее учтеный";
-            if (MapViewModel._Place.Feature.Attrs.Statecd == "06") Status_LandPlot = "Учтеный";
-
-            Adress_LandPlot = MapViewModel._Place.Feature.Attrs.Address;
-            AreaValue = MapViewModel._Place.Feature.Attrs.AreaValue.ToString() + " м^2";
-
-            //Категория земель
-            for (int i = 0; i < _categories.Fields[4].Domain.CodedValues.Length; i++)
+            try
             {
-                if (MapViewModel._Place.Feature.Attrs.CategoryType == _categories.Fields[4].Domain.CodedValues[i].Code.String) Categ_LandPlot = _categories.Fields[4].Domain.CodedValues[i].Name;
-            }
+                Type_LandPlot = "Земельный участок";
 
-            //Форма собственности
-            for (int i = 0; i < _forms.Fields[4].Domain.CodedValues.Length; i++)
+                Cad_Num_LandPlot = MapViewModel._Place.Feature.Attrs.Cn;
+                Cad_quarter_LandPlot = MapViewModel._Place.Feature.Attrs.KvartalCn;
+
+                //Статус
+                if (MapViewModel._Place.Feature.Attrs.Statecd == "01") Status_LandPlot = "Ранее учтеный";
+                if (MapViewModel._Place.Feature.Attrs.Statecd == "06") Status_LandPlot = "Учтеный";
+
+                Adress_LandPlot = MapViewModel._Place.Feature.Attrs.Address;
+                AreaValue = MapViewModel._Place.Feature.Attrs.AreaValue.ToString() + " м^2";
+
+                //Категория земель
+                for (int i = 0; i < _categories.Fields[4].Domain.CodedValues.Length; i++)
+                {
+                    if (MapViewModel._Place.Feature.Attrs.CategoryType == _categories.Fields[4].Domain.CodedValues[i].Code.String) Categ_LandPlot = _categories.Fields[4].Domain.CodedValues[i].Name;
+                }
+
+                //Форма собственности
+                for (int i = 0; i < _forms.Fields[4].Domain.CodedValues.Length; i++)
+                {
+                    if (MapViewModel._Place.Feature.Attrs.Fp == _forms.Fields[4].Domain.CodedValues[i].Code.ToString()) Form_LandPlot = _forms.Fields[4].Domain.CodedValues[i].Name;
+                }
+
+                Cost_LandPlot = MapViewModel._Place.Feature.Attrs.CadCost + " руб.";
+
+                //Разрешенное использование
+                for (int i = 0; i < _types.Fields[4].Domain.CodedValues.Length; i++)
+                {
+                    if (MapViewModel._Place.Feature.Attrs.UtilCode == _types.Fields[4].Domain.CodedValues[i].Code.String) PermirredUse_LandPlot = _types.Fields[4].Domain.CodedValues[i].Name;
+                }
+
+                Doc_LandPlot = MapViewModel._Place.Feature.Attrs.UtilByDoc;
+
+                //Кадастровый инженер
+                CadEng_LandPlot = "";
+
+
+                StartDate_LandPlot = MapViewModel._Place.Feature.Attrs.DateCreate;
+                ChangeDate_LandPlot = MapViewModel._Place.Feature.Attrs.CadRecordDate;
+                LoadingDate_LandPlot = MapViewModel._Place.Feature.Attrs.Adate;
+            }
+            catch (Exception)
             {
-                if (MapViewModel._Place.Feature.Attrs.Fp == _forms.Fields[4].Domain.CodedValues[i].Code.ToString()) Form_LandPlot = _forms.Fields[4].Domain.CodedValues[i].Name;
+
+                //_StatusBarText = "В данном месте нет земельного участка нанесенного на РКК!";
             }
-
-            Cost_LandPlot = MapViewModel._Place.Feature.Attrs.CadCost + " руб.";
-
-            //Разрешенное использование
-            for (int i = 0; i < _types.Fields[4].Domain.CodedValues.Length; i++)
-            {
-                if (MapViewModel._Place.Feature.Attrs.UtilCode == _types.Fields[4].Domain.CodedValues[i].Code.String) PermirredUse_LandPlot = _types.Fields[4].Domain.CodedValues[i].Name;
-            }
-
-            Doc_LandPlot = MapViewModel._Place.Feature.Attrs.UtilByDoc;
-
-            //Кадастровый инженер
-            CadEng_LandPlot = "";
-
-
-            StartDate_LandPlot = MapViewModel._Place.Feature.Attrs.DateCreate;
-            ChangeDate_LandPlot = MapViewModel._Place.Feature.Attrs.CadRecordDate;
-            LoadingDate_LandPlot = MapViewModel._Place.Feature.Attrs.Adate;
+            
         }
 
         public Uri UpdetePKKImageUri(MapPoint LeftTop_Point, MapPoint RightBottom_Point, Place SelectedPlace, string size_h, string size_w)
@@ -459,7 +488,7 @@ namespace Doss.ViewModel
             {
                 Dispatcher.BeginInvoke(new ThreadStart(delegate { Status = true; }));
             }
-            
+            secondThread.Abort();
         }
 
         #region Mouse_Click
@@ -544,20 +573,21 @@ namespace Doss.ViewModel
             }
         }
         #endregion
-
+        Esri.ArcGISRuntime.UI.Graphic a;
         private void SetBorder()
         {
+            if (_BorderValue!=0)
+            {
+                _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri);
+                BorderIsVisible = true; 
+            }
             //new Thread(() => _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri)).Start();
-            _MapVM.CreatePictureBorder(_MapVM.OverLay, Img_Uri);
-            BorderIsVisible = true;;
-           
-
-
         }
-        private void HideDorder()
+        private void HideBorder()
         {
             try
             {
+                _BorderValue = 0;
                 _MapVM.OverLay.Graphics.Remove(_MapVM.OverLay.Graphics[1]);
                 BorderIsVisible = false;
             }
@@ -581,6 +611,7 @@ namespace Doss.ViewModel
                 AllPlaces += item.Feature.Attrs.Cn + " ";
             }
             _StatusBarText = "Анализ завершен. Рабочая область готова для использования";
+
         }
 
         private void ReseachBorder()
@@ -590,24 +621,49 @@ namespace Doss.ViewModel
 
         private void CreateWordDoc()
         {
-            double screenLeft = _Window.GridMap.PointToScreen(new Point(0, 0)).X;
-            double screenTop = _Window.GridMap.PointToScreen(new Point(0, 0)).Y;
-            double screenWidth = _Window.GridMap.PointToScreen(new Point(_Window.GridMap.ActualWidth, _Window.GridMap.ActualHeight)).X - screenLeft;
-
-            double screenHeight = _Window.GridMap.PointToScreen(new Point(_Window.GridMap.ActualWidth, _Window.GridMap.ActualHeight)).Y - screenTop;
-
-            using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap((int)screenWidth,
-                (int)screenHeight))
+            try
             {
-                using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(bmp))
-                {
-                    g.CopyFromScreen((int)screenLeft, (int)screenTop, 0, 0, bmp.Size);
-                    bmp.Save("pictureforDoc.png");
-                }
+                double screenLeft = _Window.GridMap.PointToScreen(new Point(0, 0)).X;
+                double screenTop = _Window.GridMap.PointToScreen(new Point(0, 0)).Y;
+                double screenWidth = _Window.GridMap.PointToScreen(new Point(_Window.GridMap.ActualWidth, _Window.GridMap.ActualHeight)).X - screenLeft;
 
+                double screenHeight = _Window.GridMap.PointToScreen(new Point(_Window.GridMap.ActualWidth, _Window.GridMap.ActualHeight)).Y - screenTop;
+
+                using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap((int)screenWidth,
+                    (int)screenHeight))
+                {
+                    using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(bmp))
+                    {
+                        g.CopyFromScreen((int)screenLeft, (int)screenTop, 0, 0, bmp.Size);
+                        bmp.Save("pictureforDoc.png");
+                    }
+
+                }
+                WorkWithDoc Doc = new WorkWithDoc(FoundPlaces, _categories, _сad_num_LandPlot, _BorderValue.ToString());
             }
-            WorkWithDoc Doc = new WorkWithDoc(FoundPlaces,_categories);
+            catch (Exception)
+            {
+
+               //StatusBarText!!!!!!
+            }
+            
+            
         }
+        #region Workbench
+        private void SaveWorkbench()
+        {
+            var a = _MyMapView.GetCurrentViewpoint(ViewpointType.CenterAndScale);
+            MyViewPoint p = new MyViewPoint(a.TargetScale, a.TargetGeometry.Extent.XMax, a.TargetGeometry.Extent.YMax,a.TargetGeometry.SpatialReference.Wkid, CadMap,StreetMap,SpaceMap);
+            ViewPointWork.SavePoint(p);
+        }
+
+        private void LoadWorkbench()
+        {
+            MyViewPoint p = ViewPointWork.LoadPoint();
+            MyMapView.SetViewpointCenterAsync(new MapPoint(p.X,p.Y, new Esri.ArcGISRuntime.Geometry.SpatialReference(p.Wkid)));
+            MyMapView.SetViewpointScaleAsync(p.Scale);
+        }
+        #endregion
 
         #region command
         public Command SetCadMapCommand { get; set; }
@@ -618,6 +674,9 @@ namespace Doss.ViewModel
         public Command HideBorderCommand { get; set; }
         public Command ReseachBorderCommand { get; set; }
         public Command CreateWordDocCommad { get; set; }
+        public Command SaveWorkbenchCommand { get; set; }
+
+        public Command LoadWorkbenchCommand { get; set; }
         #endregion
 
         #region INotifyPropertyChanged

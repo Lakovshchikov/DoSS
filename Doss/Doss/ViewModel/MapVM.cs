@@ -163,7 +163,7 @@ namespace Doss.ViewModel
             
             var resourceStream = GetStreamFromUrl(_uri.ToString());
             CreateBitMap_FromUri(_uri);
-            ImageWorks =  new ImageWork(MainViewModel.SelectedPlace_Bitmap, MainViewModel.Scale, MainViewModel._BorderValue);
+            ImageWorks =  new ImageWork(MainViewModel.SelectedPlace_Bitmap, MainViewModel.Scale,Math.Abs(MainViewModel._BorderValue));
             byte[] border_Img = await ImageWorks.CreateImg();
             PictureMarkerSymbol pinSymbol =  new PictureMarkerSymbol(new RuntimeImage(border_Img));
             pinSymbol.Width = MainViewModel.MyWindow.GridMap.ActualWidth;
