@@ -438,7 +438,7 @@ namespace Doss.ViewModel
             catch (Exception)
             {
 
-                //_StatusBarText = "В данном месте нет земельного участка нанесенного на РКК!";
+                _StatusBarText = "В данном месте нет земельного участка нанесенного на РКК!";
             }
             
         }

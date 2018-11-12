@@ -163,6 +163,7 @@
     <None Include="Docs\Описание работы UI.docx" />
     <None Include="Docs\Пользовательские сценарии.docx" />
     <None Include="Docs\Постановка задачи проектирования.docx" />
+    <None Include="Docs\Разработка пользовательского интерфейса.docx" />
     <None Include="Docs\ТЗ Лаковщиков v4.docx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
